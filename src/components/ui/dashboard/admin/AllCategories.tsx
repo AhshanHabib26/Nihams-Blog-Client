@@ -103,8 +103,8 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({
       <TableRow key={item._id}>
         <TableCell>
           <div className="flex items-center gap-2">
-            <Tags size={22} color="#363636" />
-           <p className="text-gray-600 text-lg hind-siliguri-medium"> {item.title}</p>
+            <Tags size={22} className="text-gray-600" />
+           <p className="text-gray-600 text-lg hind-siliguri-light"> {item.title}</p>
           </div>
         </TableCell>
         <TableCell className="flex items-center gap-3 justify-end cursor-pointer">

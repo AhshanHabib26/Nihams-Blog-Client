@@ -8,38 +8,80 @@ import {
   useGetAllPostQuery,
 } from "@/redux/features/post/postApi";
 import { TResponse } from "@/types";
-import { TPost } from "@/types/common.data";
+import { TBlog } from "@/types/common.data";
 import { HardDrive, ListPlus } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 export const PostPage = () => {
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
   const { data, isFetching } = useGetAllPostQuery({ page, limit });
   const total = data?.meta?.total ?? 0;
   const [deletePost] = useDeletePostMutation();
 
-
   const deleteHandler = async (id: string) => {
-    const toastId = toast.loading("Deleting...");
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this post?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
 
-    try {
-      const res = (await deletePost(id)) as TResponse<any>;
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Deleting...",
+        text: "Please wait while the post is being deleted",
+        icon: "info",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+      });
 
-      if (res.error) {
-        toast.error(res.error.data.message, { id: toastId, duration: 1500 });
-      } else {
-        toast.success("Post deleted successfully", {
-          id: toastId,
-          duration: 1000,
+      try {
+        const res = (await deletePost(id)) as TResponse<any>;
+
+        if (res.error) {
+          Swal.fire({
+            title: "Error!",
+            text: res.error.data.message,
+            icon: "error",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Post deleted successfully",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error
+            ? `Error: ${err.message}`
+            : "Something went wrong";
+        Swal.fire({
+          title: "Error!",
+          text: errorMessage,
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
         });
       }
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? `Error: ${err.message}` : "Something went wrong";
-      toast.error(errorMessage, { id: toastId, duration: 1500 });
+    } else {
+      Swal.fire({
+        title: "Cancelled",
+        text: "Post deletion was cancelled",
+        icon: "info",
+        timer: 1000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -73,7 +115,7 @@ export const PostPage = () => {
         ) : (
           <div>
             <div>
-              {data?.data?.map((post: TPost) => (
+              {data?.data?.map((post: TBlog) => (
                 <PostCard
                   post={post}
                   key={post._id}

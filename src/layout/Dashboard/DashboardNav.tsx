@@ -13,9 +13,20 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/auth/authSlice";
 
 const DashboardNav = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
   return (
     <div>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -160,7 +171,7 @@ const DashboardNav = () => {
             </Sheet>
 
             <div className=" flex flex-1 items-end justify-end">
-              <Button>Logout</Button>
+              <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-500">Logout</Button>
             </div>
           </header>
           <main className="p-4">

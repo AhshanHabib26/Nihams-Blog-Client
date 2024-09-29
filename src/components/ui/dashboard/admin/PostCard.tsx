@@ -1,4 +1,4 @@
-import { TPostProps } from "@/types/common.data";
+import { TBlogProps } from "@/types/common.data";
 import {
   Book,
   Eye,
@@ -10,15 +10,15 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export const PostCard: React.FC<TPostProps> = ({ post, deleteHandler }) => {
+export const PostCard: React.FC<TBlogProps> = ({ post, deleteHandler }) => {
   const navigate = useNavigate();
 
   const handleEdit = () => {
-    navigate(`/dashboard/create-post/${post._id}`);
+    navigate(`/dashboard/create-post/${post.slug}`);
   };
 
   return (
-    <div className="flex items-start gap-4 bg-gray-50 p-2 mb-3 rounded-lg">
+    <div className="flex items-start gap-4 bg-gray-50 text-gray-800 p-2 mb-3 rounded-lg">
       <div className="w-full">
         <div className="flex items-center gap-1">
           <Book size={20} />
@@ -52,9 +52,9 @@ export const PostCard: React.FC<TPostProps> = ({ post, deleteHandler }) => {
                 className=" cursor-pointer"
               />
               <Trash2
-                onClick={() => deleteHandler(post._id)}
+                onClick={() => deleteHandler?.(post?._id)}
                 size={20}
-                className=" cursor-pointer"
+                className="cursor-pointer"
               />
             </div>
           </div>

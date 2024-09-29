@@ -4,15 +4,20 @@ export type TBlog = {
   description: string;
   author: string;
   tags: string[];
-  category: string;
+  user?: {
+    fullname: string;
+  };
+  category: TCategory
+  slug: string;
   viewsCount: number;
   likesCount: number;
   createdAt?: string;
   comments: number;
 };
 export type TBlogProps = {
-  blog: TBlog;
+  post: TBlog;
   index?: number;
+  deleteHandler?: (id: string) => void;
 };
 
 export type TCategory = {

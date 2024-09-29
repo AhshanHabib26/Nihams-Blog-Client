@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/ui/input";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, ChangeEvent } from "react";
 import {
   Select,
   SelectContent,
@@ -33,6 +33,7 @@ export const CreatePostPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+  const [slug, setSlug] = useState<string>("");
   const [postId, setPostId] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
@@ -71,6 +72,7 @@ export const CreatePostPage = () => {
   useEffect(() => {
     if (post) {
       setTitle(post?.data?.title || "");
+      setSlug(post?.data?.slug || "");
       setDescription(post?.data?.description || "");
       setSelectedCategory(post?.data?.category._id || "");
       setPostId(post?.data?._id || null);
@@ -114,6 +116,28 @@ export const CreatePostPage = () => {
     setTags(tagsArray);
   };
 
+
+ 
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    setSlug(convertToSlug(newTitle));
+  };
+
+  const convertToSlug = (text: string): string => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\u0980-\u09FF-]+/g, '') // Allow Bangla characters and hyphens
+      .replace(/--+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, ''); // Trim - from end of text
+  };
+
+
+
   if (isFetchingPost) {
     return <DashboardLoader />;
   }
@@ -130,13 +154,12 @@ export const CreatePostPage = () => {
       description,
       category: selectedCategory,
       tags,
+      slug,
     };
 
     const toastId = toast.loading(
       postId ? "Post updating..." : "Post creating..."
     );
-
-    console.log(userData);
 
     try {
       const response = postId
@@ -172,65 +195,74 @@ export const CreatePostPage = () => {
     setTitle("");
     setSelectedCategory("");
     setPostId(null);
+    setSlug("");
+    setTags([])
   };
 
   return (
     <div className="text-gray-700">
-      <div className="my-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="my-4 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <Input
           className="h-[50px] text-lg"
           type="text"
           placeholder="Enter your title"
           aria-label="Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={handleTitleChange}
         />
-
-        <div>
-          {isErrorCategories && <p>Error loading categories.</p>}
-
-          {isFetchingCategories ? (
-            <CategoryLoader />
-          ) : (
-            <Select
-              value={selectedCategory || ""}
-              onValueChange={handleCategoryChange}
-            >
-              <SelectTrigger className="h-[50px] text-lg" aria-label="Category">
-                <SelectValue placeholder="Choose category" />
-              </SelectTrigger>
-              <SelectContent>
-                {isFetchingCategories && (
-                  <SelectItem value="loading" disabled>
-                    Loading...
-                  </SelectItem>
-                )}
-                {isErrorCategories && (
-                  <SelectItem value="error" disabled>
-                    Error loading categories
-                  </SelectItem>
-                )}
-                {categories.length > 0 ? (
-                  categories.map((category) => (
-                    <SelectItem
-                      className="text-lg"
-                      key={category.id}
-                      value={category.id}
-                    >
-                      {category.title}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="null" disabled>
-                    No categories available
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
+         <Input
+          className="h-[50px] text-lg"
+          type="text"
+          placeholder="Enter your slug"
+          aria-label="Slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+        />
       </div>
-      <div className="mb-4">
+      <div>
+        {isErrorCategories && <p>Error loading categories.</p>}
+
+        {isFetchingCategories ? (
+          <CategoryLoader />
+        ) : (
+          <Select
+            value={selectedCategory || ""}
+            onValueChange={handleCategoryChange}
+          >
+            <SelectTrigger className="h-[50px] text-lg" aria-label="Category">
+              <SelectValue placeholder="Choose category" />
+            </SelectTrigger>
+            <SelectContent>
+              {isFetchingCategories && (
+                <SelectItem value="loading" disabled>
+                  Loading...
+                </SelectItem>
+              )}
+              {isErrorCategories && (
+                <SelectItem value="error" disabled>
+                  Error loading categories
+                </SelectItem>
+              )}
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <SelectItem
+                    className="text-lg"
+                    key={category.id}
+                    value={category.id}
+                  >
+                    {category.title}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="null" disabled>
+                  No categories available
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+      <div className="my-4">
         <Input
           type="text"
           value={input}
