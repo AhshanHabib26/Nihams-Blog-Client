@@ -1,6 +1,7 @@
 import MainLayout from "@/layout/Client/MainLayout";
 import { DashboardLayout } from "@/layout/Dashboard/DashboardLayout";
 import ProtectedRoute from "@/layout/Dashboard/ProtectedRoute";
+import BlogPage from "@/pages/Client/Blog";
 import HomePage from "@/pages/Client/Home";
 import LoginPage from "@/pages/Client/Login";
 import RegisterPage from "@/pages/Client/Register";
@@ -21,6 +22,10 @@ export const routes = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/blog/:slug",
+        element: <BlogPage />,
       },
     ],
   },

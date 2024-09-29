@@ -1,17 +1,24 @@
 import { TBlogProps } from "@/types/common.data";
+import { FaAngleRight } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 interface Props extends TBlogProps {
   isLast?: boolean;
 }
 
-const PopularBlogCard: React.FC<Props> = ({ blog, index, isLast }) => {
+const PopularBlogCard: React.FC<Props> = ({ blog, isLast }) => {
   return (
-    <div className={`text-gray-600 ${isLast ? '' : 'border-b border-gray-200 border-dashed'}`}>
-      <div className="mb-2">
-        <span>{(index ?? 0) + 1}</span>
-        <p>{blog.category}</p>
-        <h1>{blog.title}</h1>
-      </div>
+    <div
+      className={`text-gray-700 ${
+        isLast ? "" : "border-b border-gray-200 border-dashed"
+      }`}
+    >
+      <Link to={`/blog/${blog.title}`}>
+        <div className="flex items-center justify-between">
+          <h1 className="my-1 text-[17px] hind-siliguri-light">{blog.title}</h1>
+          <FaAngleRight className="text-gray-500" size={15} />
+        </div>
+      </Link>
     </div>
   );
 };
