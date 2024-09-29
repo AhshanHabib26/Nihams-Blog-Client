@@ -1,4 +1,3 @@
-
 import { TBlog } from "@/types/common.data";
 import { baseApi } from "../../api/baseApi";
 import { TResponseRedux } from "@/types";
@@ -69,6 +68,13 @@ const postApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Post"],
     }),
+    likePost: builder.mutation({
+      query: (id) => ({
+        url: `/post/likes/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Post"],
+    }),
   }),
 });
 
@@ -78,4 +84,5 @@ export const {
   useGetAllPostQuery,
   useGetSinglePostQuery,
   useUpdatePostMutation,
+  useLikePostMutation,
 } = postApi;

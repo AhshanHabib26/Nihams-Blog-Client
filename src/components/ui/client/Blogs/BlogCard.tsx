@@ -12,41 +12,88 @@ import {
   PinterestIcon,
   WhatsappShareButton,
   WhatsappIcon,
-} from "react-share"; 
+} from "react-share";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { FaEye, FaThumbsUp } from "react-icons/fa6";
+import { toast } from "sonner";
+import { useLikePostMutation } from "@/redux/features/post/postApi";
+import {
+  selectCurrentUser,
+  useCurrentToken,
+} from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
 
-const BlogCard: React.FC<TBlogProps> = ({ blog }) => {
-  const shareUrl = window.location.href; 
+const BlogCard: React.FC<TBlogProps> = ({ post }) => {
+  const shareUrl = window.location.href;
+  const token = useAppSelector(useCurrentToken);
+  const user = useAppSelector(selectCurrentUser);
+  const userId = user?.userId;
+  const liked = userId ? post.likes.includes(userId) : false;
+  const [likePost, { isLoading }] = useLikePostMutation();
+
+  const handleLike = async () => {
+    if (userId && liked) {
+      toast.info("You've already liked this post!");
+      return;
+    }
+    try {
+      await likePost(post._id).unwrap();
+    } catch {
+      toast.error("Error liking the post");
+    }
+  };
 
   return (
     <div className="text-gray-600 border border-gray-200 mb-4 p-3 rounded-lg">
       <div className="flex items-center gap-1">
         <img className="w-[40px]" src={userImg} alt="Admin" />
         <div>
-          <h1 className="text-[16px] hind-siliguri-medium">{blog.author}</h1>
+          <h1 className="text-[16px] hind-siliguri-medium">
+            {post?.user?.fullname}
+          </h1>
           <p className="text-sm hind-siliguri-medium">
-            {moment(blog.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
+            {moment(post.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
           </p>
         </div>
       </div>
       <div className="my-2">
-        <h1 className="text-lg hind-siliguri-semibold">{blog.title}</h1>
-        <p>{`${blog.description.slice(0, 220)}.....`}</p>
+        <h1 className="text-lg hind-siliguri-semibold">{post.title}</h1>
+        <p
+          className=" text-[16px] hind-siliguri-light"
+          dangerouslySetInnerHTML={{
+            __html: `${post.description.slice(0, 100)}.....`,
+          }}
+        />
       </div>
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            <FaThumbsUp size={18} className=" cursor-pointer" />
-            <span className="ml-1">{blog.likesCount}</span>
+            {token ? (
+              <FaThumbsUp
+                size={18}
+                onClick={handleLike}
+                className={`cursor-pointer ${
+                  liked ? "text-blue-500" : "text-gray-600"
+                }`}
+              />
+            ) : (
+              <FaThumbsUp size={18} className=" cursor-not-allowed" />
+            )}
+            <span className="ml-1  select-none">
+              {isLoading ? "..." : post.likesCount}
+            </span>
           </div>
           <div className="flex items-center">
             <FaEye size={18} className=" cursor-pointer" />
-            <span className="ml-1">{blog.viewsCount}</span>
+            <span className="ml-1 select-none">{post.viewsCount}</span>
           </div>
           <div className="flex items-center">
             <IoChatbubbleEllipsesSharp className=" cursor-pointer" size={18} />
-            <span className="ml-1">{blog.comments}</span>
+            <span className="ml-1 select-none">
+              {Array.isArray(post.comments)
+                ? post.comments.length
+                : post.comments}
+            </span>
           </div>
         </div>
         <div className="flex gap-2">

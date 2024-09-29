@@ -4,10 +4,11 @@ export type TBlog = {
   description: string;
   author: string;
   tags: string[];
+  likes: string[];
   user?: {
     fullname: string;
   };
-  category: TCategory
+  category: TCategory;
   slug: string;
   viewsCount: number;
   likesCount: number;

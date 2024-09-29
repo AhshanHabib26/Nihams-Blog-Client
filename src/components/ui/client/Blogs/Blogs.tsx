@@ -1,19 +1,49 @@
-import { getBlogsData } from "@/data/blogsData";
+import { useState } from "react";
 import SearchBtn from "../SearchBtn";
 import BlogCard from "./BlogCard";
 import { TBlog } from "@/types/common.data";
+import { useGetAllPostQuery } from "@/redux/features/post/postApi";
+import { PaginationCard } from "@/lib/PaginationCard";
+import { HardDrive } from "lucide-react";
+import { CategoryLoader } from "@/loader/CategoryLoader";
 
 const Blogs = () => {
-  const blogs = getBlogsData();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data, isFetching } = useGetAllPostQuery({ page, limit });
+  const total = data?.meta?.total ?? 0;
 
   return (
     <div>
       <SearchBtn />
-      <div className="mt-5">
-        {blogs.slice(0,5).map((blog: TBlog) => (
-          <BlogCard blog={blog} key={blog._id}/>
-        ))}
-      </div>
+      {data?.data?.length === 0 ? (
+        <div className="flex items-center justify-center flex-col mt-20">
+          <HardDrive size={40} className=" text-gray-400" />
+          <h1 className="text-gray-400">No Post Found</h1>
+        </div>
+      ) : (
+        <>
+          {isFetching ? (
+            <CategoryLoader />
+          ) : (
+            <div>
+              <div className="mt-5">
+                {data?.data?.map((post: TBlog) => (
+                  <BlogCard post={post} key={post._id} />
+                ))}
+              </div>
+              <div className="my-5 flex items-end justify-end">
+                <PaginationCard
+                  page={page}
+                  limit={limit}
+                  total={total}
+                  onPageChange={(newPage) => setPage(newPage)}
+                />
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
