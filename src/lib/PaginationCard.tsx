@@ -24,7 +24,7 @@ export const PaginationCard: React.FC<PaginationCardProps> = ({
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div>
+    <div className="text-gray-700">
       <Pagination>
         <PaginationContent>
           {page > 1 && (

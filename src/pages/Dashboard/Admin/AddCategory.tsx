@@ -68,8 +68,6 @@ export const AddCategoryPage = () => {
 
     const categoryData = { title: category };
 
-    console.log(categoryId, categoryData);
-
     try {
       const res = (await updateCategory({
         id: categoryId,
@@ -104,7 +102,7 @@ export const AddCategoryPage = () => {
             onChange={(e) => setCategory(e.target.value)}
             type="text"
             name="title"
-            className="h-[50px] text-gray-600 placeholder:text-gray-400"
+            className="h-[50px] text-lg text-gray-600 placeholder:text-gray-400"
             placeholder="Category Name"
           />
           {categoryId === null ? (
@@ -114,7 +112,7 @@ export const AddCategoryPage = () => {
           )}
         </div>
       </form>
-      <Separator className="mt-10" />
+      <Separator className="mt-5" />
       <div>
         <AllCategories
           onSelectCategory={(id, name) => {

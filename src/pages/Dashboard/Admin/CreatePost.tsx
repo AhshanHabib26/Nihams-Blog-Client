@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/ui/input";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
-import { Trash2 } from "lucide-react";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Select,
@@ -31,14 +30,12 @@ interface Category {
 }
 
 export const CreatePostPage = () => {
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [photo, setPhoto] = useState<File | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [postId, setPostId] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const [input, setInput] = useState<string>("");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -76,10 +73,12 @@ export const CreatePostPage = () => {
       setTitle(post?.data?.title || "");
       setDescription(post?.data?.description || "");
       setSelectedCategory(post?.data?.category._id || "");
-      setImagePreview(post?.data?.photo || "");
-      setAvatar(post?.data?.avatar || "");
       setPostId(post?.data?._id || null);
-      setPhoto(null);
+
+      // Handle tags
+      const tagsArray = Array.isArray(post?.data?.tags) ? post?.data?.tags : [];
+      setTags(tagsArray);
+      setInput(tagsArray.join(", "));
     }
   }, [post]);
 
@@ -88,41 +87,10 @@ export const CreatePostPage = () => {
     setSelectedCategory(value);
   }, []);
 
-  // Handle file input change
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.currentTarget.files?.[0];
-      if (!file) return;
-
-      // Validate file size and type
-      if (file.size > 1048576) {
-        setImageError("File size exceeds 1MB");
-        return;
-      }
-
-      if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-        setImageError("Invalid file type");
-        return;
-      }
-
-      setImageError(null);
-      setPhoto(file);
-      setImagePreview(URL.createObjectURL(file));
-    },
-    []
-  );
-
-  // Remove image preview
-  const removeImage = useCallback(() => {
-    setPhoto(null);
-    setImagePreview(null);
-  }, []);
-
   // Quill editor modules
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ font: [] }],
       [{ size: [] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [{ list: "ordered" }, { list: "bullet" }],
@@ -130,6 +98,20 @@ export const CreatePostPage = () => {
       ["link", "image", "video"],
       ["clean"],
     ],
+  };
+
+  const convertInputToArray = (inputString: string) => {
+    return inputString
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInput(value);
+    const tagsArray = convertInputToArray(value);
+    setTags(tagsArray);
   };
 
   if (isFetchingPost) {
@@ -143,24 +125,23 @@ export const CreatePostPage = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", selectedCategory);
-    formData.append("avatar", avatar);
-
-    if (photo) {
-      formData.append("file", photo);
-    }
+    const userData = {
+      title,
+      description,
+      category: selectedCategory,
+      tags,
+    };
 
     const toastId = toast.loading(
       postId ? "Post updating..." : "Post creating..."
     );
 
+    console.log(userData);
+
     try {
       const response = postId
-        ? ((await updatePost({ id: postId, data: formData })) as TResponse<any>)
-        : ((await createPost(formData)) as TResponse<any>);
+        ? ((await updatePost({ id: postId, data: userData })) as TResponse<any>)
+        : ((await createPost(userData)) as TResponse<any>);
 
       if (response.error) {
         toast.error(response.error.data.message, {
@@ -187,8 +168,6 @@ export const CreatePostPage = () => {
 
   // Reset form fields
   const resetForm = () => {
-    setPhoto(null);
-    setImagePreview(null);
     setDescription("");
     setTitle("");
     setSelectedCategory("");
@@ -196,58 +175,10 @@ export const CreatePostPage = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg">
-        {!imagePreview && (
-          <div className="flex justify-center items-center">
-            <input
-              id="images"
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <label
-              htmlFor="images"
-              className="cursor-pointer bg-slate-700 text-white px-4 py-3 rounded shadow hover:bg-slate-600"
-            >
-              Choose a file
-            </label>
-          </div>
-        )}
-
-        {imageError && <p className="text-sm text-red-600">{imageError}</p>}
-
-        {imagePreview && (
-          <div className="relative">
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="w-[800px] h-[250px] rounded-lg"
-            />
-            <button
-              onClick={removeImage}
-              className="absolute right-0 top-0 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1"
-              aria-label="Remove Image"
-            >
-              <Trash2 className="text-red-500" />
-            </button>
-          </div>
-        )}
-      </div>
-      <div>
-        <Input
-          className="h-[50px] mt-5"
-          placeholder="Enter image URL ( Leave empty if uploading a file)"
-          type="text"
-          value={avatar}
-          onChange={(e) => setAvatar(e.target.value)}
-        />
-      </div>
+    <div className="text-gray-700">
       <div className="my-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <Input
-          className="h-[50px]"
+          className="h-[50px] text-lg"
           type="text"
           placeholder="Enter your title"
           aria-label="Title"
@@ -265,7 +196,7 @@ export const CreatePostPage = () => {
               value={selectedCategory || ""}
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className="h-[50px]" aria-label="Category">
+              <SelectTrigger className="h-[50px] text-lg" aria-label="Category">
                 <SelectValue placeholder="Choose category" />
               </SelectTrigger>
               <SelectContent>
@@ -281,7 +212,11 @@ export const CreatePostPage = () => {
                 )}
                 {categories.length > 0 ? (
                   categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
+                    <SelectItem
+                      className="text-lg"
+                      key={category.id}
+                      value={category.id}
+                    >
                       {category.title}
                     </SelectItem>
                   ))
@@ -295,17 +230,31 @@ export const CreatePostPage = () => {
           )}
         </div>
       </div>
+      <div className="mb-4">
+        <Input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Enter tags separated by commas"
+          className="h-[50px] text-lg hind-siliguri-light"
+        />
+      </div>
       <div>
         <ReactQuill
           modules={modules}
           theme="snow"
           value={description}
           onChange={setDescription}
-          className="h-[250px] flex flex-1 flex-col"
+          className="h-[300px] flex flex-1 flex-col"
         />
       </div>
-      <div className="mt-20 lg:mt-14">
-        <Button type="button" onClick={handleSubmit} size="lg">
+      <div className="mt-5">
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          className="text-lg"
+          size="lg"
+        >
           {postId ? "Update Post" : "Add Post"}
         </Button>
       </div>

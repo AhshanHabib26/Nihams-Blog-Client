@@ -26,10 +26,11 @@ const DashboardNav = () => {
                 to="/dashboard"
                 className="flex items-center gap-2 font-semibold"
               >
-                <Blocks className="h-5 w-5" />
-                <span className="">Nihams Blog</span>
+                <h1 className="text-3xl hind-siliguri-semibold  bg bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
+                Nihamsedu
+              </h1>
               </Link>
-              <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+              <Button variant="outline" size="icon" className="ml-auto text-gray-600 h-8 w-8">
                 <Bell className="h-4 w-4" />
               </Button>
             </div>

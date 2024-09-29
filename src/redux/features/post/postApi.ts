@@ -1,4 +1,5 @@
-import { TPost } from "@/types/common.data";
+
+import { TBlog } from "@/types/common.data";
 import { baseApi } from "../../api/baseApi";
 import { TResponseRedux } from "@/types";
 
@@ -40,7 +41,7 @@ const postApi = baseApi.injectEndpoints({
         };
       },
       providesTags: ["Post"],
-      transformResponse: (response: TResponseRedux<TPost[]>) => ({
+      transformResponse: (response: TResponseRedux<TBlog[]>) => ({
         data: response.data,
         meta: response.meta,
       }),

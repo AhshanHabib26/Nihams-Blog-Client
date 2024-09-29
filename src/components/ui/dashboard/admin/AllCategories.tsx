@@ -4,8 +4,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import {
@@ -14,10 +12,11 @@ import {
 } from "@/redux/features/category/categoryApi";
 import { DashboardLoader } from "@/loader/DashboardLoader";
 import { Eye, HardDrive, SquarePen, Tags, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import { TResponse } from "@/types";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { TCategory } from "@/types/common.data";
+import Swal from 'sweetalert2'
+
 
 export interface AllCategoriesProps {
   onSelectCategory?: (id: string, name: string) => void;
@@ -29,31 +28,71 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({
   const [page, setPage] = useState(1);
   const limit = 10;
   const { data, isFetching } = useGetAllCategoriesQuery({ page, limit });
-
   const total = data?.meta?.total ?? 0;
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const deleteHandler = async (id: string) => {
-    const toastId = toast.loading("Deleting...");
-
-    try {
-      const res = (await deleteCategory(id)) as TResponse<any>;
-
-      if (res.error) {
-        toast.error(res.error.data.message, { id: toastId, duration: 1500 });
-      } else {
-        toast.success("Category deleted successfully", {
-          id: toastId,
-          duration: 1000,
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you really want to delete this category?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+    });
+  
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Deleting...',
+        text: 'Please wait while the category is being deleted',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+      });
+  
+      try {
+        const res = (await deleteCategory(id)) as TResponse<any>;
+  
+        if (res.error) {
+          Swal.fire({
+            title: 'Error!',
+            text: res.error.data.message,
+            icon: 'error',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else {
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Category deleted successfully',
+            icon: 'success',
+            timer: 1000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? `Error: ${err.message}` : "Something went wrong";
+        Swal.fire({
+          title: 'Error!',
+          text: errorMessage,
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
         });
       }
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? `Error: ${err.message}` : "Something went wrong";
-      toast.error(errorMessage, { id: toastId, duration: 1500 });
+    } else {
+      Swal.fire({
+        title: 'Cancelled',
+        text: 'Category deletion was cancelled',
+        icon: 'info',
+        timer: 1000,
+        showConfirmButton: false,
+      });
     }
   };
-
+  
+  
 
   const handleEdit = (id: string, name: string) => {
     onSelectCategory?.(id, name);
@@ -103,11 +142,6 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({
   return (
     <div>
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-center">Category</TableHead>
-          </TableRow>
-        </TableHeader>
         <TableBody>{renderTableRows()}</TableBody>
       </Table>
       <div className="my-5">
