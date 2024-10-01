@@ -13,8 +13,9 @@ export type TBlog = {
   viewsCount: number;
   likesCount: number;
   createdAt?: string;
-  comments: number;
+  comments?: TComment[];
 };
+
 export type TBlogProps = {
   post: TBlog;
   index?: number;
@@ -24,4 +25,14 @@ export type TBlogProps = {
 export type TCategory = {
   _id: string;
   title: string;
+};
+
+export type TComment = {
+  _id: string;
+  description: string;
+  user: {
+    initials: string; 
+    fullname: string; 
+  };
+  createdAt: string; 
 };

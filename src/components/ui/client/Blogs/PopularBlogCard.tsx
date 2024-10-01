@@ -6,16 +6,16 @@ interface Props extends TBlogProps {
   isLast?: boolean;
 }
 
-const PopularBlogCard: React.FC<Props> = ({ blog, isLast }) => {
+const PopularBlogCard: React.FC<Props> = ({ post, isLast }) => {
   return (
     <div
       className={`text-gray-700 ${
         isLast ? "" : "border-b border-gray-200 border-dashed"
       }`}
     >
-      <Link to={`/blog/${blog.title}`}>
+      <Link to={`/blog/${post.slug}`}>
         <div className="flex items-center justify-between">
-          <h1 className="my-1 text-[17px] hind-siliguri-light">{blog.title}</h1>
+          <h1 className="my-1 text-[17px] hind-siliguri-light hover:text-myBgPrimary">{post.title}</h1>
           <FaAngleRight className="text-gray-500" size={15} />
         </div>
       </Link>

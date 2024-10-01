@@ -10,7 +10,7 @@ import { CategoryLoader } from "@/loader/CategoryLoader";
 const Blogs = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
-  const { data, isFetching } = useGetAllPostQuery({ page, limit });
+  const { data, isLoading } = useGetAllPostQuery({ page, limit });
   const total = data?.meta?.total ?? 0;
 
   return (
@@ -23,7 +23,7 @@ const Blogs = () => {
         </div>
       ) : (
         <>
-          {isFetching ? (
+          {isLoading ? (
             <CategoryLoader />
           ) : (
             <div>

@@ -22,14 +22,15 @@ import {
   useCurrentToken,
 } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
+import { FolderCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const BlogCard: React.FC<TBlogProps> = ({ post }) => {
+const SingleBlogCard: React.FC<TBlogProps> = ({ post }) => {
   const shareUrl = window.location.href;
   const token = useAppSelector(useCurrentToken);
   const user = useAppSelector(selectCurrentUser);
   const userId = user?.userId;
-  const liked = userId ? post.likes.includes(userId) : false;
+  const liked = userId ? post?.likes.includes(userId) : false;
   const [likePost, { isLoading }] = useLikePostMutation();
 
   const handleLike = async () => {
@@ -53,22 +54,34 @@ const BlogCard: React.FC<TBlogProps> = ({ post }) => {
             {post?.user?.fullname}
           </h1>
           <p className="text-sm hind-siliguri-medium">
-            {moment(post.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
+            {moment(post?.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
           </p>
         </div>
       </div>
       <div className="my-2">
-        <Link className="hover:text-myBgPrimary" to={`/blog/${post.slug}`}>
-          {" "}
-          <h1 className="text-lg hind-siliguri-semibold">{post.title}</h1>
-        </Link>
+        <h1 className="text-lg hind-siliguri-semibold">{post?.title}</h1>
         <p
           className=" text-[16px] hind-siliguri-light"
           dangerouslySetInnerHTML={{
-            __html: `${post.description.slice(0, 100)}.....`,
+            __html: `${post?.description}`,
           }}
         />
       </div>
+      <div>
+        <div className="flex items-center gap-1">
+          <FolderCheck size={22} className="text-myBgSecondary" />
+          <Link
+            className=" text-myBgPrimary hover:text-myBgSecondary"
+            to={`/blog/category/${post.category.title}`}
+          >
+            {" "}
+            <h1 className="text-lg hind-siliguri-light">
+              {post?.category?.title}
+            </h1>
+          </Link>
+        </div>
+      </div>
+      <hr className=" my-2 border-[0.5] border-dashed border-gray-200" />
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="flex items-center">
@@ -84,19 +97,19 @@ const BlogCard: React.FC<TBlogProps> = ({ post }) => {
               <FaThumbsUp size={18} className=" cursor-not-allowed" />
             )}
             <span className="ml-1  select-none">
-              {isLoading ? "..." : post.likesCount}
+              {isLoading ? "..." : post?.likesCount}
             </span>
           </div>
           <div className="flex items-center">
             <FaEye size={18} className=" cursor-pointer" />
-            <span className="ml-1 select-none">{post.viewsCount}</span>
+            <span className="ml-1 select-none">{post?.viewsCount}</span>
           </div>
           <div className="flex items-center">
             <IoChatbubbleEllipsesSharp className=" cursor-pointer" size={18} />
             <span className="ml-1 select-none">
-              {Array.isArray(post.comments)
-                ? post.comments.length
-                : post.comments}
+              {Array.isArray(post?.comments)
+                ? post?.comments?.length
+                : post?.comments}
             </span>
           </div>
         </div>
@@ -122,4 +135,4 @@ const BlogCard: React.FC<TBlogProps> = ({ post }) => {
   );
 };
 
-export default BlogCard;
+export default SingleBlogCard;
