@@ -2,6 +2,7 @@ import CommentsCard from "@/components/ui/client/Blogs/CommentsCard";
 import PopularBlogs from "@/components/ui/client/Blogs/PopularBlogs";
 import SingleBlogCard from "@/components/ui/client/Blogs/SingleBlogCard";
 import SingleBlogCommentBox from "@/components/ui/client/Blogs/SingleBlogCommentBox";
+import BlogCategory from "@/components/ui/client/Category/BlogCategory";
 import Container from "@/lib/Container";
 import { CategoryLoader } from "@/loader/CategoryLoader";
 import { useGetSinglePostQuery } from "@/redux/features/post/postApi";
@@ -30,6 +31,7 @@ const BlogPage = () => {
           </div>
           <div className="col-span-12 lg:col-span-4">
             <PopularBlogs />
+            <BlogCategory />
           </div>
         </div>
       </Container>

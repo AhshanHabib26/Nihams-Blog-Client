@@ -1,7 +1,11 @@
 import { Search } from "lucide-react";
 import { Input } from "../input";
 
-const SearchBtn = () => {
+interface SearchBtnProps {
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SearchBtn: React.FC<SearchBtnProps> = ({ setSearchText }) => {
   return (
     <div>
       <div>
@@ -11,6 +15,7 @@ const SearchBtn = () => {
             size={20}
           />
           <Input
+            onChange={(e) => setSearchText(e.target.value)}
             type="text"
             className="pl-10 h-[50px] py-2 border border-gray-200 placeholder:text-gray-500 text-gray-600 hind-siliguri-regular rounded-md w-full"
             placeholder="এখানে ব্লগ খুজুন..."

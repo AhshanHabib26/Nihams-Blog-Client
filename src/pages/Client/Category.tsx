@@ -1,5 +1,6 @@
 import BlogCard from "@/components/ui/client/Blogs/BlogCard";
 import PopularBlogs from "@/components/ui/client/Blogs/PopularBlogs";
+import BlogCategory from "@/components/ui/client/Category/BlogCategory";
 import Container from "@/lib/Container";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { CategoryLoader } from "@/loader/CategoryLoader";
@@ -31,7 +32,7 @@ const CategoryPage = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl hind-siliguri-semibold text-gray-600">
-                    Category -{" "}
+                    ক্যাটাগরি -{" "}
                   </h1>
                   <p className="text-2xl font-medium text-myBgPrimary">{id}</p>
                 </div>
@@ -77,6 +78,7 @@ const CategoryPage = () => {
           </div>
           <div className="col-span-12 lg:col-span-4">
             <PopularBlogs />
+            <BlogCategory/>
           </div>
         </div>
       </Container>

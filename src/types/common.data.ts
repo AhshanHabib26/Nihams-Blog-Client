@@ -27,12 +27,16 @@ export type TCategory = {
   title: string;
 };
 
+export type TCategoryProps = {
+  category: TCategory;
+};
+
 export type TComment = {
   _id: string;
   description: string;
   user: {
-    initials: string; 
-    fullname: string; 
+    initials: string;
+    fullname: string;
   };
-  createdAt: string; 
+  createdAt: string;
 };

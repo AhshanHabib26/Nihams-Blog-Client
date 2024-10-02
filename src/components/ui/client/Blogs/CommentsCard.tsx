@@ -11,7 +11,7 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
       <h1 className="text-2xl hind-siliguri-semibold">
         Comments
         <span className="ml-2">
-          ({post.comments && post.comments.length ? post.comments.length : 0})
+          ({post?.comments && post?.comments?.length ? post?.comments?.length : 0})
         </span>
       </h1>
 
@@ -20,7 +20,7 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
         {post.comments && post.comments.length === 0 ? (
           <div>
             <p className="text-center text-xl hind-siliguri-light text-gray-400">
-              Comment Not Found. Be the first to leave a comment!
+            No comments yet. Be the first to leave a comment!
             </p>
           </div>
         ) : (
