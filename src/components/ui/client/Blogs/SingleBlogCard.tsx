@@ -22,7 +22,7 @@ import {
   useCurrentToken,
 } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
-import { FolderCheck } from "lucide-react";
+import { FolderCheck, Tags } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SingleBlogCard: React.FC<TBlogProps> = ({ post }) => {
@@ -69,16 +69,29 @@ const SingleBlogCard: React.FC<TBlogProps> = ({ post }) => {
       </div>
       <div>
         <div className="flex items-center gap-1">
-          <FolderCheck size={22} className="text-myBgSecondary" />
-          <Link
-            className=" text-myBgPrimary hover:text-myBgSecondary"
-            to={`/blog/category/${post.category.title}`}
-          >
+          <FolderCheck size={22} className="text-green-500" />
+          <Link to={`/blog/category/${post?.category?.title}`}>
             {" "}
-            <h1 className="text-lg hind-siliguri-light">
+            <h1 className="bg-green-600 px-2 text-white rounded-sm hind-siliguri-light text-md">
               {post?.category?.title}
             </h1>
           </Link>
+        </div>
+        <div>
+          {post?.tags?.length > 0 && (
+            <div className="flex items-center gap-1 mt-2">
+              <Tags size={22} className="text-myBgSecondary" />
+              {post.tags.map((tag, index) => (
+                <div key={index}>
+                  <Link to={`/blog/label/${tag}`}>
+                    <p className="bg-orange-600 px-2 text-white rounded-sm hind-siliguri-light text-md">
+                      {tag}
+                    </p>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <hr className=" my-2 border-[0.5] border-dashed border-gray-200" />

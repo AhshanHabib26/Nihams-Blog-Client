@@ -9,7 +9,7 @@ import { CategoryLoader } from "@/loader/CategoryLoader";
 
 const Blogs = () => {
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const limit = 5;
   const { data, isLoading } = useGetAllPostQuery({ page, limit });
   const total = data?.meta?.total ?? 0;
   const [searchText, setSearchText] = useState("");

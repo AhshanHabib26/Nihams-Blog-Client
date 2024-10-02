@@ -11,16 +11,17 @@ import { HardDrive } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const CategoryPage = () => {
-  const { id } = useParams();
-  const [page, setPage] = useState(1);
-  const limit = 10;
-  const { data, isLoading } = useGetAllPostQuery({ page, limit });
-  const selectedCategory = data?.data?.filter(
-    (item) => item?.category?.title === id
-  );
+const LabelPage = () => {
 
-  const total = data?.meta?.total ?? 0;
+    const { tag } = useParams();
+    const [page, setPage] = useState(1);
+    const limit = 10;
+    const { data, isLoading } = useGetAllPostQuery({ page, limit });
+    const selectedTags = data?.data?.filter(
+        (item) => tag && item?.tags?.includes(tag)
+      );
+      
+    const total = data?.meta?.total ?? 0;
 
   return (
     <div className="mt-10">
@@ -33,14 +34,14 @@ const CategoryPage = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl hind-siliguri-semibold text-gray-600">
-                    Category -{" "}
+                    Label -{" "}
                   </h1>
-                  <p className="text-2xl font-medium text-myBgPrimary">{id}</p>
+                  <p className="text-2xl font-medium text-myBgPrimary">{tag}</p>
                 </div>
                 <hr className=" my-2 border-[0.5] border-dashed border-gray-200" />
                 <div>
                   <div>
-                    {selectedCategory && selectedCategory?.length === 0 ? (
+                    {selectedTags && selectedTags?.length === 0 ? (
                       <div className="flex items-center justify-center flex-col mt-20">
                         <HardDrive size={40} className=" text-gray-400" />
                         <h1 className="text-gray-400">No Post Found</h1>
@@ -52,13 +53,13 @@ const CategoryPage = () => {
                         ) : (
                           <div>
                             <div className="mt-5">
-                              {selectedCategory &&
-                                selectedCategory?.map((post: TBlog) => (
+                              {selectedTags &&
+                                selectedTags?.map((post: TBlog) => (
                                   <BlogCard post={post} key={post._id} />
                                 ))}
                             </div>
-                            {selectedCategory &&
-                              selectedCategory.length > limit && (
+                            {selectedTags &&
+                              selectedTags.length > limit && (
                                 <div className="my-5 flex items-end justify-end">
                                   <PaginationCard
                                     page={page}
@@ -85,7 +86,7 @@ const CategoryPage = () => {
         </div>
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default CategoryPage;
+export default LabelPage

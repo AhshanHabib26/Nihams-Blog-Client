@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PostCard } from "@/components/ui/dashboard/admin/PostCard";
+import { PostCard } from "@/components/ui/dashboard/admin/Blog/PostCard";
 import { Separator } from "@/components/ui/separator";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { DashboardLoader } from "@/loader/DashboardLoader";

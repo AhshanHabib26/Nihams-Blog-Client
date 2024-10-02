@@ -1,8 +1,10 @@
 import {
   Bell,
   Blocks,
+  CircleHelp,
   CopyPlus,
   Home,
+  Layers3,
   LineChart,
   ListPlus,
   Menu,
@@ -18,7 +20,6 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
 
 const DashboardNav = () => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,10 +39,14 @@ const DashboardNav = () => {
                 className="flex items-center gap-2 font-semibold"
               >
                 <h1 className="text-3xl hind-siliguri-semibold  bg bg-gradient-to-r from-orange-300 to-orange-400 bg-clip-text text-transparent">
-                Nihamsedu
-              </h1>
+                  Nihamsedu
+                </h1>
               </Link>
-              <Button variant="outline" size="icon" className="ml-auto text-gray-600 h-8 w-8">
+              <Button
+                variant="outline"
+                size="icon"
+                className="ml-auto text-gray-600 h-8 w-8"
+              >
                 <Bell className="h-4 w-4" />
               </Button>
             </div>
@@ -62,11 +67,25 @@ const DashboardNav = () => {
                   All Post{" "}
                 </Link>
                 <Link
-                  to="/dashboard/add-category"
+                  to="/dashboard/post-category"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                 >
                   <ListPlus className="h-4 w-4" />
-                  Add Category{" "}
+                  Post Category{" "}
+                </Link>
+                <Link
+                  to="/dashboard/all-quiz"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <CircleHelp className="h-4 w-4" />
+                  All Quiz{" "}
+                </Link>
+                <Link
+                  to="/dashboard/quiz-category"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <Layers3 className="h-4 w-4" />
+                  Quiz Category{" "}
                 </Link>
                 <Link
                   to="/dashboard/comments"
@@ -139,11 +158,25 @@ const DashboardNav = () => {
                     All Post{" "}
                   </Link>
                   <Link
-                    to="/dashboard/add-category"
+                    to="/dashboard/post-category"
                     className="flex items-center font-normal gap-2 rounded-lg px-2  text-muted-foreground transition-all hover:text-primary"
                   >
                     <ListPlus className="h-4 w-4" />
-                    Add Category{" "}
+                    Post Category{" "}
+                  </Link>
+                  <Link
+                    to="/dashboard/all-quiz"
+                    className="flex items-center gap-2 font-normal rounded-lg px-2 text-muted-foreground transition-all hover:text-primary"
+                  >
+                    <CircleHelp className="h-4 w-4" />
+                    All Quiz{" "}
+                  </Link>
+                  <Link
+                    to="/dashboard/quiz-category"
+                    className="flex items-center font-normal gap-2 rounded-lg px-2  text-muted-foreground transition-all hover:text-primary"
+                  >
+                    <Layers3 className="h-4 w-4" />
+                    Quiz Category{" "}
                   </Link>
                   <Link
                     to="/dashboard/comments"
@@ -171,7 +204,12 @@ const DashboardNav = () => {
             </Sheet>
 
             <div className=" flex flex-1 items-end justify-end">
-              <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-500">Logout</Button>
+              <Button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-500"
+              >
+                Logout
+              </Button>
             </div>
           </header>
           <main className="p-4">

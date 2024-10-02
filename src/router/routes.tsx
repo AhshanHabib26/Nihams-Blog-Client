@@ -4,14 +4,19 @@ import ProtectedRoute from "@/layout/Dashboard/ProtectedRoute";
 import BlogPage from "@/pages/Client/Blog";
 import CategoryPage from "@/pages/Client/Category";
 import HomePage from "@/pages/Client/Home";
+import LabelPage from "@/pages/Client/Label";
 import LoginPage from "@/pages/Client/Login";
 import RegisterPage from "@/pages/Client/Register";
-import { AddCategoryPage } from "@/pages/Dashboard/Admin/AddCategory";
 import { AnalyticsPage } from "@/pages/Dashboard/Admin/Analytics";
-import { CommentPage } from "@/pages/Dashboard/Admin/Comment";
-import { CreatePostPage } from "@/pages/Dashboard/Admin/CreatePost";
+import { AddCategoryPage } from "@/pages/Dashboard/Admin/Blog/AddCategory";
+import { CommentPage } from "@/pages/Dashboard/Admin/Blog/Comment";
+import { CreatePostPage } from "@/pages/Dashboard/Admin/Blog/CreatePost";
+import { PostPage } from "@/pages/Dashboard/Admin/Blog/Post";
 import DAHomePage from "@/pages/Dashboard/Admin/Home";
-import { PostPage } from "@/pages/Dashboard/Admin/Post";
+import { AllQuizCategoryPage } from "@/pages/Dashboard/Admin/Quiz/Category";
+import { CreateQuizCategoryPage } from "@/pages/Dashboard/Admin/Quiz/CreateCategory";
+import { CreateQuizPage } from "@/pages/Dashboard/Admin/Quiz/CreateQuiz";
+import { AllQuizPage } from "@/pages/Dashboard/Admin/Quiz/Quiz";
 import UserPage from "@/pages/Dashboard/Admin/User";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -31,6 +36,10 @@ export const routes = createBrowserRouter([
       {
         path: "/blog/category/:id",
         element: <CategoryPage/>,
+      },
+      {
+        path: "/blog/label/:tag",
+        element: <LabelPage/>,
       },
     ],
   },
@@ -59,12 +68,36 @@ export const routes = createBrowserRouter([
         element: <CreatePostPage />,
       },
       {
-        path: "add-category",
+        path: "post-category",
         element: <AddCategoryPage />,
       },
       {
         path: "comments",
         element: <CommentPage />,
+      },
+      {
+        path: "all-quiz",
+        element: <AllQuizPage />,
+      },
+      {
+        path: "create-quiz",
+        element: <CreateQuizPage />,
+      },
+      {
+        path: "create-quiz/:id",
+        element: <CreateQuizPage />,
+      },
+      {
+        path: "create-category",
+        element: <CreateQuizCategoryPage/>,
+      },
+      {
+        path: "create-category/:id",
+        element: <CreateQuizCategoryPage />,
+      },
+      {
+        path: "quiz-category",
+        element: <AllQuizCategoryPage/>,
       },
       {
         path: "all-user",

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
-import { AllCategories } from "@/components/ui/dashboard/admin/AllCategories";
+import { AllCategories } from "@/components/ui/dashboard/admin/Blog/AllCategories";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
