@@ -23,6 +23,8 @@ import {
 } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { Link } from "react-router-dom";
+import newImg from "../../../../assets/icons/new.png";
+import { isNewBlog } from "@/lib/isNew";
 
 const BlogCard: React.FC<TBlogProps> = ({ post }) => {
   const shareUrl = window.location.href;
@@ -46,15 +48,30 @@ const BlogCard: React.FC<TBlogProps> = ({ post }) => {
 
   return (
     <div className="text-gray-600 border border-gray-200 mb-4 p-3 rounded-lg">
-      <div className="flex items-center gap-1">
-        <img className="w-[40px]" src={userImg} alt="Admin" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <img className="w-[40px]" src={userImg} alt="Admin" />
+          <div>
+            <h1 className="text-[16px] hind-siliguri-medium">
+              {post?.user?.fullname}
+            </h1>
+            <p className="text-sm hind-siliguri-medium">
+              {moment(post.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
+            </p>
+          </div>
+        </div>
         <div>
-          <h1 className="text-[16px] hind-siliguri-medium">
-            {post?.user?.fullname}
-          </h1>
-          <p className="text-sm hind-siliguri-medium">
-            {moment(post.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
-          </p>
+          <div>
+            {post?.createdAt && isNewBlog(post.createdAt) && (
+              <div>
+                <img
+                  className="w-[35px]"
+                  src={newImg}
+                  alt="New Post"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="my-2">

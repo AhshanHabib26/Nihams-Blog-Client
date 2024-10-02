@@ -22,15 +22,25 @@ const RecentBlogs = () => {
         .slice(0, 10) 
     : [];
 
-  // If no recent blogs found, get random 10 posts from the available data
-  const randomBlogs = data?.data
+  // Get previous posts excluding the recent ones
+  const previousBlogs = data?.data
     ? [...data.data]
+        .filter((post: TBlog) => {
+          if (post.createdAt) {
+            const createdAt = new Date(post.createdAt);
+            return createdAt < yesterday; // Get posts older than yesterday
+          }
+          return false; 
+        })
         .sort(() => 0.5 - Math.random()) // Shuffle the posts randomly
-        .slice(0, 10) // Take the top 10 random posts
+        .slice(0, 10) // Take up to 10 random previous posts
     : [];
 
-  // Determine which blogs to display
-  const blogsToDisplay = recentBlogs.length > 0 ? recentBlogs : randomBlogs;
+  // Combine recent blogs and previous blogs to ensure we always have 10
+  const blogsToDisplay = [
+    ...recentBlogs,
+    ...previousBlogs,
+  ].slice(0, 10); 
 
   return (
     <div className="shadow bg-gray-50 rounded-md glassmorphism">
