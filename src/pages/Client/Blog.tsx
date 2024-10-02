@@ -1,5 +1,6 @@
 import CommentsCard from "@/components/ui/client/Blogs/CommentsCard";
 import PopularBlogs from "@/components/ui/client/Blogs/PopularBlogs";
+import RecentBlogs from "@/components/ui/client/Blogs/RecentBlogs";
 import SingleBlogCard from "@/components/ui/client/Blogs/SingleBlogCard";
 import SingleBlogCommentBox from "@/components/ui/client/Blogs/SingleBlogCommentBox";
 import BlogCategory from "@/components/ui/client/Category/BlogCategory";
@@ -30,8 +31,9 @@ const BlogPage = () => {
             )}
           </div>
           <div className="col-span-12 lg:col-span-4">
-            <PopularBlogs />
+            <RecentBlogs />
             <BlogCategory />
+            <PopularBlogs />
           </div>
         </div>
       </Container>

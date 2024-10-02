@@ -2,6 +2,7 @@ import Blogs from "@/components/ui/client/Blogs/Blogs";
 import Container from "@/lib/Container";
 import PopularBlogs from "@/components/ui/client/Blogs/PopularBlogs";
 import BlogCategory from "@/components/ui/client/Category/BlogCategory";
+import RecentBlogs from "@/components/ui/client/Blogs/RecentBlogs";
 
 const HomePage = () => {
   return (
@@ -13,10 +14,9 @@ const HomePage = () => {
               <Blogs />
             </div>
             <div className="col-span-12 lg:col-span-4">
+              <RecentBlogs />
+              <BlogCategory />
               <PopularBlogs />
-              <div>
-                <BlogCategory />
-              </div>
             </div>
           </div>
         </Container>

@@ -1,5 +1,6 @@
 import BlogCard from "@/components/ui/client/Blogs/BlogCard";
 import PopularBlogs from "@/components/ui/client/Blogs/PopularBlogs";
+import RecentBlogs from "@/components/ui/client/Blogs/RecentBlogs";
 import BlogCategory from "@/components/ui/client/Category/BlogCategory";
 import Container from "@/lib/Container";
 import { PaginationCard } from "@/lib/PaginationCard";
@@ -77,8 +78,9 @@ const CategoryPage = () => {
             )}
           </div>
           <div className="col-span-12 lg:col-span-4">
+            <RecentBlogs />
+            <BlogCategory />
             <PopularBlogs />
-            <BlogCategory/>
           </div>
         </div>
       </Container>

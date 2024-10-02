@@ -16,7 +16,7 @@ const Blogs = () => {
 
   // Filter the posts based on searchText
   const filteredPosts = data?.data?.filter((post: TBlog) =>
-    post.title.toLowerCase().includes(searchText.toLowerCase())
+    post?.title?.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (

@@ -10,7 +10,7 @@ const PopularBlogs = () => {
     : [];
 
   return (
-    <div className="shadow bg-gray-50 rounded-md glassmorphism">
+    <div className="shadow bg-gray-50 rounded-md glassmorphism mt-8">
       <div className="bg-white rounded-t-md text-gray-600 text-center p-2 shadow">
         <h1 className="text-lg hind-siliguri-semibold">জনপ্রিয় পোষ্ট</h1>
       </div>
