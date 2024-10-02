@@ -43,9 +43,9 @@ const RecentBlogs = () => {
   ].slice(0, 10); 
 
   return (
-    <div className="shadow bg-gray-50 rounded-md glassmorphism">
-      <div className="bg-white rounded-t-md text-gray-600 text-center p-2 shadow">
-        <h1 className="text-lg hind-siliguri-semibold">সাম্প্রতিক পোষ্ট</h1>
+    <div className="shadow-md border-[0.5px] border-gray-200 rounded-md">
+      <div className="bg-white rounded-t-md text-gray-600 p-2 shadow-sm">
+        <h1 className="text-lg hind-siliguri-semibold ml-2">Recent Blogs</h1>
       </div>
       <div className="p-4">
         {isLoading ? (

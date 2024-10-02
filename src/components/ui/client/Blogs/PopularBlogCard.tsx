@@ -13,12 +13,23 @@ const PopularBlogCard: React.FC<Props> = ({ post, isLast }) => {
         isLast ? "" : "border-b border-gray-200 border-dashed"
       }`}
     >
-      <Link to={`/blog/${post.slug}`}>
-        <div className="flex items-center justify-between">
-          <h1 className="my-1 text-[17px] hind-siliguri-light hover:text-myBgPrimary">{post.title}</h1>
+      <div className="flex items-center justify-between">
+        <div className="my-1">
+          <Link to={`/blog/category/${post?.category?.title}`}>
+            <p className="bg-orange-100 my-1 inline-block px-2 rounded text-sm hind-siliguri-light">
+              {post?.category?.title ? post?.category?.title : "Uncategorised"}
+            </p>
+          </Link>
+          <Link to={`/blog/${post.slug}`}>
+            <h1 className="text-[17px] hind-siliguri-medium hover:text-myBgPrimary">
+              {post.title}
+            </h1>
+          </Link>
+        </div>
+        <div>
           <FaAngleRight className="text-gray-500" size={15} />
         </div>
-      </Link>
+      </div>
     </div>
   );
 };

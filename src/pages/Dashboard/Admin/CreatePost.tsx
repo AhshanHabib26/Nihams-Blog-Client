@@ -74,7 +74,7 @@ export const CreatePostPage = () => {
       setTitle(post?.data?.title || "");
       setSlug(post?.data?.slug || "");
       setDescription(post?.data?.description || "");
-      setSelectedCategory(post?.data?.category._id || "");
+      setSelectedCategory(post?.data?.category?._id || "");
       setPostId(post?.data?._id || null);
 
       // Handle tags

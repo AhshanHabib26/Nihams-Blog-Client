@@ -5,11 +5,10 @@ import BlogCategoryCard from "./BlogCategoryCard";
 
 const BlogCategory = () => {
   const { data, isLoading } = useGetAllCategoriesQuery({});
-
   return (
-    <div className="shadow bg-gray-50 rounded-md glassmorphism mt-8">
-      <div className="bg-white rounded-t-md text-gray-600 text-center p-2 shadow">
-        <h1 className="text-lg hind-siliguri-semibold">জনপ্রিয় ক্যাটেগরি</h1>
+    <div className="shadow-md border-[0.5px] border-gray-200 rounded-md  mt-5">
+      <div className="bg-white rounded-t-md text-gray-600 p-2 shadow-sm">
+        <h1 className="text-lg hind-siliguri-semibold ml-2">All Category</h1>
       </div>
       <div className="p-4">
         {isLoading ? (

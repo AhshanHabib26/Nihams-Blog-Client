@@ -17,7 +17,7 @@ const CategoryPage = () => {
   const limit = 10;
   const { data, isLoading } = useGetAllPostQuery({ page, limit });
   const selectedCategory = data?.data?.filter(
-    (item) => item.category.title === id
+    (item) => item?.category?.title === id
   );
 
   const total = data?.meta?.total ?? 0;
