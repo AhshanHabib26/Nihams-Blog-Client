@@ -8,26 +8,45 @@ import { CategoryLoader } from "@/loader/CategoryLoader";
 import { useGetAllPostQuery } from "@/redux/features/post/postApi";
 import { TBlog } from "@/types/common.data";
 import { HardDrive } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const CategoryPage = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const limit = 10;
-  const { data, isLoading } = useGetAllPostQuery({ page, limit });
+  const { data, isLoading } = useGetAllPostQuery(
+    { page, limit },
+    {
+      refetchOnMountOrArgChange: false,
+    }
+  );
   const selectedCategory = data?.data?.filter(
     (item) => item?.category?.title === id
   );
 
   const total = data?.meta?.total ?? 0;
 
+  const [showLoader, setShowLoader] = useState(false);
+
+  // Delay loader for smoother experience
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (isLoading) setShowLoader(true);
+    }, 300);
+
+    return () => {
+      clearTimeout(delay);
+      setShowLoader(false);
+    };
+  }, [isLoading]);
+
   return (
     <div className="mt-10">
       <Container>
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 lg:col-span-8">
-            {isLoading ? (
+            {showLoader ? (
               <CategoryLoader />
             ) : (
               <div>

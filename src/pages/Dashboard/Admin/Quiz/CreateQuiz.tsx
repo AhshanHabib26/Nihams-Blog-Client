@@ -16,7 +16,11 @@ import { TResponse } from "@/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { DashboardLoader } from "@/loader/DashboardLoader";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateQuizMutation, useGetSingleQuizQuery, useUpdateQuizMutation } from "@/redux/features/quiz/quiz/quizApi";
+import {
+  useCreateQuizMutation,
+  useGetSingleQuizQuery,
+  useUpdateQuizMutation,
+} from "@/redux/features/quiz/quiz/quizApi";
 import { CategoryLoader } from "@/loader/CategoryLoader";
 import { useGetAllQuizCategoriesQuery } from "@/redux/features/quiz/category/categoryApi";
 
@@ -197,7 +201,13 @@ export const CreateQuizPage = () => {
 
   // Handle form submission
   const handleSubmit = async () => {
-    if (!title || !description || !selectedCategory || !duration) {
+    if (
+      !title ||
+      !description ||
+      !selectedCategory ||
+      !tags ||
+      !difficultyLevel
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -212,7 +222,7 @@ export const CreateQuizPage = () => {
       category: selectedCategory,
     };
 
-    console.log(quizData)
+    console.log(quizData);
 
     const toastId = toast.loading(id ? "Quiz updating..." : "Quiz creating...");
 
@@ -276,8 +286,11 @@ export const CreateQuizPage = () => {
               value={selectedCategory || ""}
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger  className="h-[50px] text-lg hind-siliguri-light" aria-label="Category">
-                <SelectValue  placeholder="Choose category" />
+              <SelectTrigger
+                className="h-[50px] text-lg hind-siliguri-light"
+                aria-label="Category"
+              >
+                <SelectValue placeholder="Choose category" />
               </SelectTrigger>
               <SelectContent>
                 {isFetchingCategories && (
@@ -292,7 +305,11 @@ export const CreateQuizPage = () => {
                 )}
                 {categories.length > 0 ? (
                   categories.map((category) => (
-                    <SelectItem className="text-lg hind-siliguri-light cursor-pointer" key={category.id} value={category.id}>
+                    <SelectItem
+                      className="text-lg hind-siliguri-light cursor-pointer"
+                      key={category.id}
+                      value={category.id}
+                    >
                       {category.name}
                     </SelectItem>
                   ))
@@ -415,18 +432,18 @@ export const CreateQuizPage = () => {
                 <>
                   <Button
                     size="default"
-                    className="bg-red-600 hover:bg-red-500 text-lg hind-siliguri-light"
-                    onClick={() => handleRemoveQuestion(index)}
-                  >
-                    Remove Question
-                  </Button>
-
-                  <Button
-                    size="default"
                     className="bg-green-600 hover:bg-green-500 text-lg hind-siliguri-light"
                     onClick={handleAddQuestion}
                   >
                     Add Question
+                  </Button>
+                  
+                  <Button
+                    size="default"
+                    className="bg-red-600 hover:bg-red-500 text-lg hind-siliguri-light"
+                    onClick={() => handleRemoveQuestion(index)}
+                  >
+                    Remove Question
                   </Button>
                 </>
               )}
@@ -447,7 +464,12 @@ export const CreateQuizPage = () => {
       </div>
 
       <div className="flex items-center justify-between my-5">
-        <Button className="text-lg hind-siliguri-light" type="button" onClick={handleSubmit} size="default">
+        <Button
+          className="text-lg hind-siliguri-light"
+          type="button"
+          onClick={handleSubmit}
+          size="default"
+        >
           {id ? "Update Quiz" : "Add Quiz"}
         </Button>
       </div>

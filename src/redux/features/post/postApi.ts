@@ -39,6 +39,7 @@ const postApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      keepUnusedDataFor: 60,
       providesTags: ["Post"],
       transformResponse: (response: TResponseRedux<TBlog[]>) => ({
         data: response.data,
@@ -66,6 +67,7 @@ const postApi = baseApi.injectEndpoints({
         url: `/post/${id}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60,
       providesTags: ["Post"],
     }),
     likePost: builder.mutation({

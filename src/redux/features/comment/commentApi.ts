@@ -39,6 +39,7 @@ const commentApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      keepUnusedDataFor: 60,
       providesTags: ["Comment"],
       transformResponse: (response: TResponseRedux<TComment[]>) => ({
         data: response.data,

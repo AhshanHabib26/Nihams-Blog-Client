@@ -1,7 +1,7 @@
 import Container from "@/lib/Container";
 import { DashboardLoader } from "@/loader/DashboardLoader";
 import { useGetSubmissionQuizQuery } from "@/redux/features/quiz/quiz/quizApi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Define TypeScript interfaces
 interface Answer {
@@ -88,7 +88,7 @@ const QuizSubmissionPage = () => {
                         optionClasses += " text-gray-700";
                       }
                       return (
-                        <li key={i} className={optionClasses}>
+                        <li key={i} className={`${optionClasses} mb-2`}>
                           {option}
                         </li>
                       );
@@ -104,11 +104,11 @@ const QuizSubmissionPage = () => {
                       .
                     </p>
                   )}
-                 {
-                  question.explanation ?  <p className="mt-2 text-gray-700">
-                  <strong>Explanation:</strong> {question.explanation}
-                </p> : null
-                 }
+                  {question.explanation ? (
+                    <p className="mt-2 text-gray-700">
+                      <strong>Explanation:</strong> {question.explanation}
+                    </p>
+                  ) : null}
                 </div>
               );
             })}
@@ -121,6 +121,14 @@ const QuizSubmissionPage = () => {
             <p className="text-lg font-semibold">
               Correct Answers: {correctAnswersCount}
             </p>
+          </div>
+          <div className="flex items-end justify-end">
+            <Link
+              className=" bg-myBgPrimary hover:bg-myBgSecondary px-3 py-2 text-white rounded-sm mt-4"
+              to="/"
+            >
+              Back to Home
+            </Link>
           </div>
         </div>
       </Container>

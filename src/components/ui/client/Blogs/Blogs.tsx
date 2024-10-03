@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBtn from "../SearchBtn";
 import BlogCard from "./BlogCard";
 import { TBlog } from "@/types/common.data";
@@ -10,9 +10,27 @@ import { CategoryLoader } from "@/loader/CategoryLoader";
 const Blogs = () => {
   const [page, setPage] = useState(1);
   const limit = 5;
-  const { data, isLoading } = useGetAllPostQuery({ page, limit });
+  const { data, isLoading } = useGetAllPostQuery(
+    { page, limit },
+    {
+      refetchOnMountOrArgChange: false, // prevent refetching on revisit
+    }
+  );
   const total = data?.meta?.total ?? 0;
   const [searchText, setSearchText] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
+
+  // Delay loader for smoother experience
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (isLoading) setShowLoader(true);
+    }, 300);
+
+    return () => {
+      clearTimeout(delay);
+      setShowLoader(false); 
+    };
+  }, [isLoading]);
 
   // Filter the posts based on searchText
   const filteredPosts = data?.data?.filter((post: TBlog) =>
@@ -29,7 +47,7 @@ const Blogs = () => {
         </div>
       ) : (
         <>
-          {isLoading ? (
+          {showLoader ? (
             <CategoryLoader />
           ) : (
             <div>

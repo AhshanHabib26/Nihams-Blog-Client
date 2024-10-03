@@ -37,25 +37,33 @@ const QuizDetails = () => {
   useEffect(() => {
     if (isToggled) {
       const quizDuration = data?.data?.duration || 0;
-      setTimer(quizDuration * 60); // Convert minutes to seconds
+      if (quizDuration > 0) {
+        setTimer(quizDuration * 60); 
+      } else {
+        setTimer(0); 
+      }
     }
   }, [isToggled, data?.data?.duration]);
-
+  
   useEffect(() => {
+    if (timer === 0) {
+      return;
+    }
+  
     if (timer <= 0) {
       if (isToggled) {
-        handleTimeEnd();
+        handleTimeEnd(); 
       }
       return;
     }
-
+  
     const timerInterval = setInterval(() => {
       setTimer((prev) => prev - 1);
     }, 1000);
-
+  
     return () => clearInterval(timerInterval);
   }, [timer, isToggled]);
-
+  
   if (isFetching) {
     return (
       <div>
@@ -63,14 +71,20 @@ const QuizDetails = () => {
       </div>
     );
   }
-
+  
   const handleToggle = () => {
     setIsToggled((prev) => !prev);
     if (!isToggled) {
-      setTimer(data?.data?.duration * 60); // Restart timer on new quiz
+      const quizDuration = data?.data?.duration || 0;
+      if (quizDuration > 0) {
+        setTimer(quizDuration * 60); 
+      } else {
+        setTimer(0); 
+      }
     }
   };
-
+  
+  
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSelectedAnswers((prev) => ({
@@ -131,7 +145,7 @@ const QuizDetails = () => {
         navigate("/"); // Navigate to home or another page
       } else if (result.isDismissed) {
         // Handle See Details button click
-        navigate(`/quiz-submission/${submission._id}`); // Navigate to details page with quiz ID
+        navigate(`/quiz/quiz-submission/${submission._id}`); // Navigate to details page with quiz ID
       }
     } catch (error) {
       const errorMessage =

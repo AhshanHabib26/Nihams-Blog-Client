@@ -39,6 +39,7 @@ const categoryApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      keepUnusedDataFor: 60,
       providesTags: ["Category"],
       transformResponse: (response: TResponseRedux<TCategory[]>) => ({
         data: response.data,
