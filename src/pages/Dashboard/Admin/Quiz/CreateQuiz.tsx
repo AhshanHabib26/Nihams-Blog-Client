@@ -212,6 +212,8 @@ export const CreateQuizPage = () => {
       category: selectedCategory,
     };
 
+    console.log(quizData)
+
     const toastId = toast.loading(id ? "Quiz updating..." : "Quiz creating...");
 
     try {

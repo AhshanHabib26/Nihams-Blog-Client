@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/table";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { DashboardLoader } from "@/loader/DashboardLoader";
-import { useDeleteQuizCategoryMutation, useGetAllQuizCategoriesQuery } from "@/redux/features/quiz/category/categoryApi";
+import {
+  useDeleteQuizCategoryMutation,
+  useGetAllQuizCategoriesQuery,
+} from "@/redux/features/quiz/category/categoryApi";
 import { TResponse } from "@/types";
 import { Eye, HardDrive, ListPlus, SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -20,7 +23,7 @@ import { toast } from "sonner";
 export const AllQuizCategoryPage = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
   const { data, isFetching } = useGetAllQuizCategoriesQuery({ page, limit });
   const total = data?.meta?.total ?? 0;
   const [deleteCategory] = useDeleteQuizCategoryMutation();
@@ -55,11 +58,7 @@ export const AllQuizCategoryPage = () => {
       <TableRow key={item._id}>
         <TableCell>
           <div className="flex items-center gap-2">
-            {item.image === null ? (
-              <img src={item.imageUrl} className="w-8" />
-            ) : (
-              <img src={item.image} className="w-8" />
-            )}
+            <img src={item.imageUrl} className="w-8" />
             {item.name}
           </div>
         </TableCell>

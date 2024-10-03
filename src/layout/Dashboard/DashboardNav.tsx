@@ -5,6 +5,7 @@ import {
   CopyPlus,
   Home,
   Layers3,
+  LibraryBig,
   LineChart,
   ListPlus,
   Menu,
@@ -18,6 +19,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const DashboardNav = () => {
   const dispatch = useDispatch();
@@ -54,63 +61,91 @@ const DashboardNav = () => {
               <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
                 <Link
                   to="/dashboard"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  className="flex items-center gap-2 rounded-lg px-3"
                 >
                   <Home className="h-4 w-4" />
                   Dashboard
                 </Link>
-                <Link
-                  to="/dashboard/all-post"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <CopyPlus className="h-4 w-4" />
-                  All Post{" "}
-                </Link>
-                <Link
-                  to="/dashboard/post-category"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <ListPlus className="h-4 w-4" />
-                  Post Category{" "}
-                </Link>
-                <Link
-                  to="/dashboard/all-quiz"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <CircleHelp className="h-4 w-4" />
-                  All Quiz{" "}
-                </Link>
-                <Link
-                  to="/dashboard/quiz-category"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <Layers3 className="h-4 w-4" />
-                  Quiz Category{" "}
-                </Link>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="blogs">
+                    <AccordionTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <LibraryBig className="h-4 w-4" />
+                        Blogs
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-2">
+                        <Link
+                          to="/dashboard/all-post"
+                          className="flex items-center gap-2 px-3"
+                        >
+                          <CopyPlus className="h-4 w-4" />
+                          All Post
+                        </Link>
+                        <Link
+                          to="/dashboard/post-category"
+                          className="flex items-center gap-2 px-3"
+                        >
+                          <ListPlus className="h-4 w-4" />
+                          Post Category
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="quizs">
+                    <AccordionTrigger className="flex items-center gap-2 px-3 py-0 rounded-lg ">
+                      <div className="flex items-center gap-2">
+                        <CircleHelp className="h-4 w-4" />
+                        Quiz
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-2 mt-2">
+                        <Link
+                          to="/dashboard/all-quiz"
+                          className="flex items-center gap-2 rounded-lg px-3"
+                        >
+                          <CircleHelp className="h-4 w-4" />
+                          All Quiz{" "}
+                        </Link>
+                        <Link
+                          to="/dashboard/quiz-category"
+                          className="flex items-center gap-2 rounded-lg px-3"
+                        >
+                          <Layers3 className="h-4 w-4" />
+                          Quiz Category{" "}
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
                 <Link
                   to="/dashboard/comments"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  className="flex items-center gap-2 rounded-lg px-3 pt-2"
                 >
                   <MessageCircleMore className="h-4 w-4" />
                   Comments{" "}
                 </Link>
                 <Link
                   to="/dashboard/all-user"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  className="flex items-center gap-2 rounded-lg px-3 pt-2"
                 >
                   <Users className="h-4 w-4" />
                   Users
                 </Link>
                 <Link
                   to="/dashboard/analytics"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  className="flex items-center gap-2 rounded-lg px-3 pt-2"
                 >
                   <LineChart className="h-4 w-4" />
                   Analytics
                 </Link>
                 <Link
                   to="/"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2"
                 >
                   <SquareArrowLeft className="h-4 w-4" />
                   Back Home
@@ -150,34 +185,62 @@ const DashboardNav = () => {
                     <Home className="h-4 w-4" />
                     Dashboard
                   </Link>
-                  <Link
-                    to="/dashboard/all-post"
-                    className="flex items-center gap-2 font-normal rounded-lg px-2 text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <CopyPlus className="h-4 w-4" />
-                    All Post{" "}
-                  </Link>
-                  <Link
-                    to="/dashboard/post-category"
-                    className="flex items-center font-normal gap-2 rounded-lg px-2  text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <ListPlus className="h-4 w-4" />
-                    Post Category{" "}
-                  </Link>
-                  <Link
-                    to="/dashboard/all-quiz"
-                    className="flex items-center gap-2 font-normal rounded-lg px-2 text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <CircleHelp className="h-4 w-4" />
-                    All Quiz{" "}
-                  </Link>
-                  <Link
-                    to="/dashboard/quiz-category"
-                    className="flex items-center font-normal gap-2 rounded-lg px-2  text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <Layers3 className="h-4 w-4" />
-                    Quiz Category{" "}
-                  </Link>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="blogs">
+                      <AccordionTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground transition-all hover:text-primary">
+                        <div className="flex items-center gap-2">
+                          <LibraryBig className="h-4 w-4" />
+                          Blogs
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-2">
+                          <Link
+                            to="/dashboard/all-post"
+                            className="flex items-center gap-2 px-3"
+                          >
+                            <CopyPlus className="h-4 w-4" />
+                            All Post
+                          </Link>
+                          <Link
+                            to="/dashboard/post-category"
+                            className="flex items-center gap-2 px-3"
+                          >
+                            <ListPlus className="h-4 w-4" />
+                            Post Category
+                          </Link>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="blogs">
+                      <AccordionTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground transition-all hover:text-primary">
+                        <div className="flex items-center gap-2">
+                          <LibraryBig className="h-4 w-4" />
+                          Quiz
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-2">
+                          <Link
+                            to="/dashboard/all-quiz"
+                            className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                          >
+                            <CircleHelp className="h-4 w-4" />
+                            All Quiz{" "}
+                          </Link>
+                          <Link
+                            to="/dashboard/quiz-category"
+                            className="flex items-center gap-2 rounded-lg px-3 text-muted-foreground transition-all hover:text-primary"
+                          >
+                            <Layers3 className="h-4 w-4" />
+                            Quiz Category{" "}
+                          </Link>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                   <Link
                     to="/dashboard/comments"
                     className="flex items-center font-normal gap-2 rounded-lg px-2  text-muted-foreground transition-all hover:text-primary"

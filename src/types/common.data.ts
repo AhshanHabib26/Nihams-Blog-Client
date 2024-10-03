@@ -56,13 +56,13 @@ export type TQuiz = {
   difficultyLevel: string;
   createdAt?: string;
   category?: {
-    name: string
-  }
+    name: string;
+  };
 };
 
 export type TQuizProps = {
   quiz: TQuiz;
-  deleteHandler?: (id: string) => void ;
+  deleteHandler?: (id: string) => void;
 };
 
 export type TQuizCategory = {
@@ -74,5 +74,6 @@ export type TQuizCategory = {
 };
 export type TQuizCategoryProps = {
   category: TQuizCategory;
-  setSelectedCategory: (categoryId: string) => void;
+  setSelectedCategory?: (categoryId: string) => void;
+  index?: number;
 };

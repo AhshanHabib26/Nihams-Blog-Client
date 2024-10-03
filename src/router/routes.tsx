@@ -6,6 +6,9 @@ import CategoryPage from "@/pages/Client/Category";
 import HomePage from "@/pages/Client/Home";
 import LabelPage from "@/pages/Client/Label";
 import LoginPage from "@/pages/Client/Login";
+import QuizCategoryPage from "@/pages/Client/Quiz/QuizCategory";
+import QuizDetails from "@/pages/Client/Quiz/QuizDetails";
+import QuizSubmissionPage from "@/pages/Client/Quiz/QuizSubmission";
 import RegisterPage from "@/pages/Client/Register";
 import { AnalyticsPage } from "@/pages/Dashboard/Admin/Analytics";
 import { AddCategoryPage } from "@/pages/Dashboard/Admin/Blog/AddCategory";
@@ -40,6 +43,18 @@ export const routes = createBrowserRouter([
       {
         path: "/blog/label/:tag",
         element: <LabelPage/>,
+      },
+      {
+        path: "/quiz/category/:id",
+        element: <QuizCategoryPage/>,
+      },
+      {
+        path: "/quiz/quiz-details/:id",
+        element: <QuizDetails />,
+      },
+      {
+        path: "/quiz/quiz-submission/:id",
+        element: <QuizSubmissionPage />,
       },
     ],
   },
