@@ -8,8 +8,12 @@ import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 import { FaQuestion } from "react-icons/fa6";
 import { toast } from "sonner";
-import { useGetSingleQuizQuery, useSubmitQuizMutation } from "@/redux/features/quiz/quiz/quizApi";
+import {
+  useGetSingleQuizQuery,
+  useSubmitQuizMutation,
+} from "@/redux/features/quiz/quiz/quizApi";
 import Container from "@/lib/Container";
+import QuizResultModal from "@/lib/QuizResultModal";
 
 export interface Question {
   _id: string;
@@ -33,37 +37,44 @@ const QuizDetails = () => {
   const [retakeCount, setRetakeCount] = useState<number>(0);
   const { data, isFetching } = useGetSingleQuizQuery(id);
   const [submitQuiz] = useSubmitQuizMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [quizResult, setQuizResult] = useState({
+    totalQuestions: 0,
+    totalMarks: 0,
+    correctCount: 0,
+    submissionId: "",
+  });
 
   useEffect(() => {
     if (isToggled) {
       const quizDuration = data?.data?.duration || 0;
       if (quizDuration > 0) {
-        setTimer(quizDuration * 60); 
+        setTimer(quizDuration * 60);
       } else {
-        setTimer(0); 
+        setTimer(0);
       }
     }
   }, [isToggled, data?.data?.duration]);
-  
+
   useEffect(() => {
     if (timer === 0) {
       return;
     }
-  
+
     if (timer <= 0) {
       if (isToggled) {
-        handleTimeEnd(); 
+        handleTimeEnd();
       }
       return;
     }
-  
+
     const timerInterval = setInterval(() => {
       setTimer((prev) => prev - 1);
     }, 1000);
-  
+
     return () => clearInterval(timerInterval);
   }, [timer, isToggled]);
-  
+
   if (isFetching) {
     return (
       <div>
@@ -71,26 +82,25 @@ const QuizDetails = () => {
       </div>
     );
   }
-  
+
   const handleToggle = () => {
     setIsToggled((prev) => !prev);
     if (!isToggled) {
       const quizDuration = data?.data?.duration || 0;
       if (quizDuration > 0) {
-        setTimer(quizDuration * 60); 
+        setTimer(quizDuration * 60);
       } else {
-        setTimer(0); 
+        setTimer(0);
       }
     }
   };
-  
-  
+
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setSelectedAnswers((prev) => ({
-      ...prev,
+    setSelectedAnswers({
+      ...selectedAnswers,
       [name]: value,
-    }));
+    });
   };
 
   const handleNextQuestion = () => {
@@ -117,41 +127,36 @@ const QuizDetails = () => {
     });
 
     try {
-      // Send userAnswers directly in the body
       const response = await submitQuiz({
         id: data.data._id,
-        data: userAnswers, // Pass userAnswers directly
+        data: userAnswers,
       }).unwrap();
+
       const { totalQuestions, totalMarks, correctCount, submission } =
         response.data;
 
-      console.log(response.data);
-
-      const result = await Swal.fire({
-        title: "Quiz Submitted",
-        html: `
-    <p style="font-size: 20px; color: #333; margin: 0;">Total Questions: ${totalQuestions}</p>
-    <p style="font-size: 20px; color: #333; margin: 0;">Total Marks: ${totalMarks}</p>
-    <p style="font-size: 20px; color: #333; margin: 0;">Correct Answers: ${correctCount}</p>
-  `,
-        icon: "success",
-        showCancelButton: true,
-        confirmButtonText: "OK",
-        cancelButtonText: "See Details",
+      setQuizResult({
+        totalQuestions,
+        totalMarks,
+        correctCount,
+        submissionId: submission._id,
       });
-
-      if (result.isConfirmed) {
-        // Handle OK button click
-        navigate("/"); // Navigate to home or another page
-      } else if (result.isDismissed) {
-        // Handle See Details button click
-        navigate(`/quiz/quiz-submission/${submission._id}`); // Navigate to details page with quiz ID
-      }
+      setIsModalOpen(true); 
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Something went wrong";
       toast.error(`Error: ${errorMessage}`);
     }
+  };
+
+  const handleConfirm = () => {
+    setIsModalOpen(false); 
+    navigate("/"); 
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false); 
+    navigate(`/quiz/quiz-submission/${quizResult.submissionId}`); 
   };
 
   const handleTimeEnd = () => {
@@ -185,7 +190,7 @@ const QuizDetails = () => {
     <div className="mt-10">
       <Container>
         <div className="max-w-4xl mx-auto w-full ">
-          {!isToggled && (
+          {!isToggled && data?.data && (
             <div className="flex flex-col lg:flex-row gap-5 border border-gray-200 rounded-md p-4">
               <div className="flex items-center lg:items-start justify-center">
                 <img
@@ -198,7 +203,7 @@ const QuizDetails = () => {
               <div className="w-full">
                 <h1 className="text-md hind-siliguri-medium text-gray-700">
                   Title:{" "}
-                  <span className=" hind-siliguri-semibold">
+                  <span className="hind-siliguri-semibold">
                     {data?.data?.title}
                   </span>
                 </h1>
@@ -207,36 +212,36 @@ const QuizDetails = () => {
                   Description:{" "}
                   {data?.data?.description && (
                     <p
-                      className=" hind-siliguri-light"
+                      className="hind-siliguri-light"
                       dangerouslySetInnerHTML={{
-                        __html: data.data.description,
+                        __html: data?.data?.description,
                       }}
                     ></p>
                   )}
                 </div>
                 <p className="text-md hind-siliguri-medium text-gray-700">
                   Duration:{" "}
-                  <span className=" hind-siliguri-light">
+                  <span className="hind-siliguri-light">
                     {data?.data?.duration} Minutes
                   </span>
                 </p>
                 <p className="text-md hind-siliguri-medium text-gray-700">
                   Level:{" "}
-                  <span className=" hind-siliguri-light">
+                  <span className="hind-siliguri-light">
                     {data?.data?.difficultyLevel}
                   </span>
                 </p>
                 <p className="text-md hind-siliguri-medium text-gray-700">
                   Category:{" "}
-                  <span className=" hind-siliguri-light">
+                  <span className="hind-siliguri-light">
                     {data?.data?.category?.name}
                   </span>
                 </p>
                 <div className="flex items-center gap-1 text-md hind-siliguri-medium text-gray-700">
                   <p>Tags: </p>
-                  {data.data.tags.map((t: string, index: number) => (
+                  {data?.data?.tags.map((t: string, index: number) => (
                     <div key={index}>
-                      <p className=" hind-siliguri-light border-[0.5px] border-dashed p-1 text-sm border-gray-400 rounded">
+                      <p className="hind-siliguri-light border-[0.5px] border-dashed p-1 text-sm border-gray-400 rounded">
                         {t}
                       </p>
                     </div>
@@ -255,7 +260,7 @@ const QuizDetails = () => {
             </div>
           )}
 
-          {isToggled && (
+          {isToggled && data?.data && (
             <div className="mt-5">
               {!reviewMode ? (
                 <div className="border border-gray-200 rounded-md p-4 relative">
@@ -272,51 +277,65 @@ const QuizDetails = () => {
                           .toString()
                           .padStart(2, "0")}`}
                     </p>
-
                     <div>
+                      {/* Display question progress */}
                       <span className="text-md bg-gray-700 text-white py-1 px-2 font-light inline-block rounded">
                         Question {currentQuestionIndex + 1} of{" "}
-                        {data.data.questions.length}
+                        {data?.data?.questions.length}
                       </span>
+
+                      {/* Display question text */}
                       <div className="flex items-start lg:items-center gap-1 my-2">
                         <FaQuestion size={18} className="text-red-600" />
                         <h1 className="text-lg hind-siliguri-semibold">
-                          {currentQuestion.questionText}
+                          {currentQuestion?.questionText}
                         </h1>
                       </div>
+
+                      {/* Display options */}
+                      <div>
+                        {currentQuestion?.options.map(
+                          (option: string, i: number) => (
+                            <div key={i}>
+                              <label className="flex items-center gap-2 text-lg">
+                                <input
+                                  type="radio"
+                                  name={`question-${currentQuestionIndex}`}
+                                  value={option}
+                                  checked={
+                                    selectedAnswers[
+                                      `question-${currentQuestionIndex}`
+                                    ] === option
+                                  }
+                                  onChange={handleOptionChange}
+                                />
+                                {option}
+                              </label>
+                            </div>
+                          )
+                        )}
+                      </div>
+
+                      {/* Display Next or Review button */}
+                      <div className="flex items-end justify-end">
+                        <button
+                          onClick={handleNextQuestion}
+                          className={`mt-2 px-6 py-2 ${
+                            selectedAnswers[`question-${currentQuestionIndex}`]
+                              ? "bg-orange-600"
+                              : "bg-gray-400"
+                          } text-white rounded`}
+                          disabled={
+                            !selectedAnswers[`question-${currentQuestionIndex}`]
+                          } // Disable if no option selected
+                        >
+                          {currentQuestionIndex <
+                          data?.data?.questions.length - 1
+                            ? "Next"
+                            : "Review"}
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      {currentQuestion.options.map(
-                        (option: string, i: number) => (
-                          <div key={i}>
-                            <label className="flex items-center gap-2 text-lg">
-                              <input
-                                type="radio"
-                                name={`question-${currentQuestionIndex}`}
-                                value={option}
-                                checked={
-                                  selectedAnswers[
-                                    `question-${currentQuestionIndex}`
-                                  ] === option
-                                }
-                                onChange={handleOptionChange}
-                              />
-                              {option}
-                            </label>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-end justify-end">
-                    <button
-                      onClick={handleNextQuestion}
-                      className="mt-2 px-6 py-2 bg-orange-600 text-white rounded"
-                    >
-                      {currentQuestionIndex < data.data.questions.length - 1
-                        ? "Next"
-                        : "Review"}
-                    </button>
                   </div>
                 </div>
               ) : (
@@ -370,6 +389,14 @@ const QuizDetails = () => {
             </div>
           )}
         </div>
+        <QuizResultModal
+          isOpen={isModalOpen}
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+          totalQuestions={quizResult.totalQuestions}
+          totalMarks={quizResult.totalMarks}
+          correctCount={quizResult.correctCount}
+        />
       </Container>
     </div>
   );

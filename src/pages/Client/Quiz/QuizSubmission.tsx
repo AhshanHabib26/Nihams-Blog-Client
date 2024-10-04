@@ -29,11 +29,11 @@ interface QuizSubmissionData {
 
 const QuizSubmissionPage = () => {
   const { id } = useParams<string>();
-  const { data, isFetching } = useGetSubmissionQuizQuery(id);
+  const { data, isLoading } = useGetSubmissionQuizQuery(id);
 
-  if (isFetching) {
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div>
         <DashboardLoader />
       </div>
     );
