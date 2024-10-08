@@ -9,22 +9,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PaginationCard } from "@/lib/PaginationCard";
-import { DashboardLoader } from "@/loader/DashboardLoader";
+import { setLoading } from "@/redux/features/global/globalSlice";
 import {
   useDeleteQuizCategoryMutation,
   useGetAllQuizCategoriesQuery,
 } from "@/redux/features/quiz/category/categoryApi";
 import { TResponse } from "@/types";
 import { Eye, HardDrive, ListPlus, SquarePen, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export const AllQuizCategoryPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const limit = 10;
-  const { data, isFetching } = useGetAllQuizCategoriesQuery({ page, limit });
+  const { data, isLoading } = useGetAllQuizCategoriesQuery({ page, limit }, {
+    refetchOnMountOrArgChange: false, 
+  });
   const total = data?.meta?.total ?? 0;
   const [deleteCategory] = useDeleteQuizCategoryMutation();
 
@@ -79,13 +83,9 @@ export const AllQuizCategoryPage = () => {
     ));
   };
 
-  if (isFetching) {
-    return (
-      <div>
-        <DashboardLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   return (
     <div>

@@ -2,7 +2,7 @@
 import { PostCard } from "@/components/ui/dashboard/admin/Blog/PostCard";
 import { Separator } from "@/components/ui/separator";
 import { PaginationCard } from "@/lib/PaginationCard";
-import { DashboardLoader } from "@/loader/DashboardLoader";
+import { setLoading } from "@/redux/features/global/globalSlice";
 import {
   useDeletePostMutation,
   useGetAllPostQuery,
@@ -10,14 +10,21 @@ import {
 import { TResponse } from "@/types";
 import { TBlog } from "@/types/common.data";
 import { HardDrive, ListPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export const PostPage = () => {
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const limit = 10;
-  const { data, isFetching } = useGetAllPostQuery({ page, limit });
+  const { data, isLoading } = useGetAllPostQuery(
+    { page, limit },
+    {
+      refetchOnMountOrArgChange: false, 
+    }
+  );
   const total = data?.meta?.total ?? 0;
   const [deletePost] = useDeletePostMutation();
 
@@ -85,13 +92,11 @@ export const PostPage = () => {
     }
   };
 
-  if (isFetching) {
-    return (
-      <div>
-        <DashboardLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
+
+
 
   return (
     <div>

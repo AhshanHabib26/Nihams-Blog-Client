@@ -38,7 +38,7 @@ const QuizCategoryCard: React.FC<TQuizCategoryProps> = ({
     <div>
       <Link to={`/quiz/category/${category.name}`}>
         <div
-          className={`flex items-center justify-between p-5 poppins-regular rounded-lg cursor-pointer ${
+          className={`flex items-center justify-between p-4 poppins-regular rounded-lg cursor-pointer ${
             hovered ? bgHoverColor[bgHoverColorIndex] : bgColor[bgColorIndex]
           }`}
           onMouseEnter={() => setHovered(true)}

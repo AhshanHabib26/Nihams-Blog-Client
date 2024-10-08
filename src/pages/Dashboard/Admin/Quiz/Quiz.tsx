@@ -3,19 +3,29 @@
 import { QuizCard } from "@/components/ui/dashboard/admin/Quiz/QuizCard";
 import { Separator } from "@/components/ui/separator";
 import { PaginationCard } from "@/lib/PaginationCard";
-import { DashboardLoader } from "@/loader/DashboardLoader";
-import { useDeleteQuizMutation, useGetAllQuizQuery } from "@/redux/features/quiz/quiz/quizApi";
+import { setLoading } from "@/redux/features/global/globalSlice";
+import {
+  useDeleteQuizMutation,
+  useGetAllQuizQuery,
+} from "@/redux/features/quiz/quiz/quizApi";
 import { TResponse } from "@/types";
 import { TQuiz } from "@/types/common.data";
 import { HardDrive, ListPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export const AllQuizPage = () => {
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const limit = 6;
-  const { data, isFetching } = useGetAllQuizQuery({ page, limit });
+  const { data, isLoading } = useGetAllQuizQuery(
+    { page, limit },
+    {
+      refetchOnMountOrArgChange: false,
+    }
+  );
   const total = data?.meta?.total ?? 0;
   const [deleteQuiz] = useDeleteQuizMutation();
 
@@ -40,13 +50,9 @@ export const AllQuizPage = () => {
     }
   };
 
-  if (isFetching) {
-    return (
-      <div>
-        <DashboardLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   return (
     <div>
@@ -71,7 +77,11 @@ export const AllQuizPage = () => {
           <div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {data?.data?.map((quiz: TQuiz) => (
-                <QuizCard quiz={quiz} key={quiz._id} deleteHandler={deleteHandler} />
+                <QuizCard
+                  quiz={quiz}
+                  key={quiz._id}
+                  deleteHandler={deleteHandler}
+                />
               ))}
             </div>
             <div className="my-5">
