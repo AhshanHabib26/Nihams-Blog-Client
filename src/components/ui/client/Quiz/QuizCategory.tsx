@@ -19,7 +19,7 @@ const QuizCategory = () => {
   }, [isLoading, dispatch]);
 
   return (
-    <div className=" mt-10">
+    <div className=" mt-5">
       {!isLoading && (
         <h1 className="text-2xl text-center hind-siliguri-semibold mb-5">
           Quiz Category

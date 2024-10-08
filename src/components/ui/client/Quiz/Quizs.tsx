@@ -1,11 +1,11 @@
 import { useGetAllQuizQuery } from "@/redux/features/quiz/quiz/quizApi";
 import { useState, useEffect } from "react";
-import QuizCard from "./QuizCard";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { TQuiz } from "@/types/common.data";
 import { HardDrive } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/features/global/globalSlice";
+import QuizListCard from "./QuizListCard";
 
 const Quizs = () => {
   const dispatch = useDispatch();
@@ -43,9 +43,9 @@ const Quizs = () => {
           <div>
             {!isLoading && (
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 max-w-4xl mx-auto">
+                <div>
                   {data?.data?.map((quiz: TQuiz) => (
-                    <QuizCard quiz={quiz} key={quiz._id} />
+                    <QuizListCard quiz={quiz} key={quiz._id} />
                   ))}
                 </div>
                 {total > limit && (

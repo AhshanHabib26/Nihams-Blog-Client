@@ -14,7 +14,7 @@ const QuizCard: React.FC<TQuizProps> = ({ quiz }) => {
       <div className="border border-gray-300 p-3 rounded-md relative">
         <div className="flex gap-2">
           <div>
-            <img src={QuizImg} className="w-[100px] rounded-md" alt="" />
+            <img src={QuizImg} className="w-[10px] rounded-md" alt="" />
           </div>
           <div>
             <div className="flex gap-1 items-start lg:items-center">

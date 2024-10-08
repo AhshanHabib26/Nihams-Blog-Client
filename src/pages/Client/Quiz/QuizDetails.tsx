@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import avatar from "../../../assets/images/quizDetailsImg.jpg";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
@@ -139,7 +139,7 @@ const QuizDetails = () => {
         correctCount,
         submissionId: submission?._id,
       });
-      setIsModalOpen(true); 
+      setIsModalOpen(true);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Something went wrong";
@@ -148,13 +148,13 @@ const QuizDetails = () => {
   };
 
   const handleConfirm = () => {
-    setIsModalOpen(false); 
-    navigate("/"); 
+    setIsModalOpen(false);
+    navigate("/");
   };
 
   const handleClose = () => {
-    setIsModalOpen(false); 
-    navigate(`/quiz/quiz-submission/${quizResult.submissionId}`); 
+    setIsModalOpen(false);
+    navigate(`/quiz/quiz-submission/${quizResult.submissionId}`);
   };
 
   const handleTimeEnd = () => {
@@ -192,7 +192,7 @@ const QuizDetails = () => {
             <div className="flex flex-col lg:flex-row gap-5 border border-gray-200 rounded-md p-4">
               <div className="flex items-center lg:items-start justify-center">
                 <img
-                  className="w-full lg:w-[400px] h-[250px] rounded-md"
+                  className="w-full lg:w-[500px] h-[250px] rounded-md"
                   src={avatar}
                   alt={data?.data?.title}
                 />
@@ -235,13 +235,16 @@ const QuizDetails = () => {
                     {data?.data?.category?.name}
                   </span>
                 </p>
-                <div className="flex items-center gap-1 text-md hind-siliguri-medium text-gray-700">
+                <div className="flex items-center gap-1 text-md hind-siliguri-medium text-gray-700 mt-2">
                   <p>Tags: </p>
                   {data?.data?.tags.map((t: string, index: number) => (
-                    <div key={index}>
-                      <p className="hind-siliguri-light border-[0.5px] border-dashed p-1 text-sm border-gray-400 rounded">
-                        {t}
-                      </p>
+                    <div
+                      key={index}
+                      className="border-[0.5px] border-dashed px-3 py-1 text-sm border-gray-400 rounded hover:text-orange-500 hover:border-orange-500"
+                    >
+                      <Link to={`/quiz/label/${t}`}>
+                        <p className="hind-siliguri-light">{t}</p>
+                      </Link>
                     </div>
                   ))}
                 </div>

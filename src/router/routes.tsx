@@ -8,6 +8,7 @@ import LabelPage from "@/pages/Client/Label";
 import LoginPage from "@/pages/Client/Login";
 import QuizCategoryPage from "@/pages/Client/Quiz/QuizCategory";
 import QuizDetails from "@/pages/Client/Quiz/QuizDetails";
+import QuizLabelPage from "@/pages/Client/Quiz/QuizLabel";
 import QuizSubmissionPage from "@/pages/Client/Quiz/QuizSubmission";
 import RegisterPage from "@/pages/Client/Register";
 import { AnalyticsPage } from "@/pages/Dashboard/Admin/Analytics";
@@ -38,15 +39,19 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/blog/category/:id",
-        element: <CategoryPage/>,
+        element: <CategoryPage />,
       },
       {
         path: "/blog/label/:tag",
-        element: <LabelPage/>,
+        element: <LabelPage />,
       },
       {
         path: "/quiz/category/:id",
-        element: <QuizCategoryPage/>,
+        element: <QuizCategoryPage />,
+      },
+      {
+        path: "/quiz/label/:tag",
+        element: <QuizLabelPage />,
       },
       {
         path: "/quiz/quiz-details/:id",
@@ -104,7 +109,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "create-category",
-        element: <CreateQuizCategoryPage/>,
+        element: <CreateQuizCategoryPage />,
       },
       {
         path: "create-category/:id",
@@ -112,7 +117,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "quiz-category",
-        element: <AllQuizCategoryPage/>,
+        element: <AllQuizCategoryPage />,
       },
       {
         path: "all-user",
