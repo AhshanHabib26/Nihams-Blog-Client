@@ -1,14 +1,17 @@
-import { CategoryLoader } from "@/loader/CategoryLoader";
 import { useGetAllQuizQuery } from "@/redux/features/quiz/quiz/quizApi";
 import { useState, useEffect } from "react";
 import QuizCard from "./QuizCard";
 import { PaginationCard } from "@/lib/PaginationCard";
 import { TQuiz } from "@/types/common.data";
 import { HardDrive } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/features/global/globalSlice";
 
 const Quizs = () => {
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const limit = 4;
+
   const { data, isLoading } = useGetAllQuizQuery(
     { page, limit },
     {
@@ -17,24 +20,18 @@ const Quizs = () => {
   );
 
   const total = data?.meta?.total ?? 0;
-  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    const delay = setTimeout(() => {
-      if (isLoading) setShowLoader(true);
-    }, 300);
-
-    return () => {
-      clearTimeout(delay);
-      setShowLoader(false); 
-    };
-  }, [isLoading]);
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   return (
     <div className="mt-10">
-      <h1 className="text-2xl text-center hind-siliguri-semibold mb-5">
-        All Quiz
-      </h1>
+      {!isLoading && (
+        <h1 className="text-2xl text-center hind-siliguri-semibold mb-5">
+          All Quiz
+        </h1>
+      )}
 
       <div>
         {data?.data?.length === 0 ? (
@@ -43,10 +40,9 @@ const Quizs = () => {
             <h1 className="text-gray-400">No Quiz Found</h1>
           </div>
         ) : (
-          <>
-            {showLoader && <CategoryLoader />} 
+          <div>
             {!isLoading && (
-              <div>
+              <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 max-w-4xl mx-auto">
                   {data?.data?.map((quiz: TQuiz) => (
                     <QuizCard quiz={quiz} key={quiz._id} />
@@ -62,9 +58,9 @@ const Quizs = () => {
                     />
                   </div>
                 )}
-              </div>
+              </>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -1,6 +1,8 @@
 import Container from "@/lib/Container";
-import { DashboardLoader } from "@/loader/DashboardLoader";
+import { setLoading } from "@/redux/features/global/globalSlice";
 import { useGetSubmissionQuizQuery } from "@/redux/features/quiz/quiz/quizApi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 // Define TypeScript interfaces
@@ -28,26 +30,25 @@ interface QuizSubmissionData {
 }
 
 const QuizSubmissionPage = () => {
+  const dispatch = useDispatch();
   const { id } = useParams<string>();
-  const { data, isLoading } = useGetSubmissionQuizQuery(id);
+  const { data, isLoading } = useGetSubmissionQuizQuery(id, {
+    refetchOnMountOrArgChange: false, 
+  });
 
-  if (isLoading) {
-    return (
-      <div>
-        <DashboardLoader />
-      </div>
-    );
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
+
+  if (!data || !data?.data) {
+    return null;
   }
 
-  if (!data || !data.data) {
-    return <p>Error: Data is not available.</p>;
-  }
-
-  const { quiz, answers, totalMarks } = data.data as QuizSubmissionData;
-  const questions = quiz.questions;
-  const correctAnswersCount = answers.filter((ans) => {
-    const question = questions[ans.questionIndex];
-    return question && ans.selectedOption === question.correctOption;
+  const { quiz, answers, totalMarks } = data?.data as QuizSubmissionData;
+  const questions = quiz?.questions;
+  const correctAnswersCount = answers?.filter((ans) => {
+    const question = questions[ans?.questionIndex];
+    return question && ans?.selectedOption === question?.correctOption;
   }).length;
 
   return (
@@ -60,24 +61,24 @@ const QuizSubmissionPage = () => {
           </h1>
 
           <div className="space-y-4">
-            {questions.map((question, index) => {
+            {questions?.map((question, index) => {
               const userAnswer = answers.find(
                 (ans) => ans.questionIndex === index
               );
               const isCorrect =
-                userAnswer?.selectedOption === question.correctOption;
+                userAnswer?.selectedOption === question?.correctOption;
               const isUserAnswerWrong =
                 !isCorrect && userAnswer?.selectedOption;
 
               return (
-                <div key={question._id} className="border-b pb-4">
+                <div key={question?._id} className="border-b pb-4">
                   <h2 className="text-lg font-semibold mb-2">
-                    {question.questionText}
+                    {question?.questionText}
                   </h2>
                   <ul className="list-disc pl-5">
-                    {question.options.map((option, i) => {
+                    {question?.options.map((option, i) => {
                       let optionClasses = "p-2 rounded cursor-pointer";
-                      if (option === question.correctOption) {
+                      if (option === question?.correctOption) {
                         optionClasses += " bg-green-200 text-green-700";
                       } else if (
                         isUserAnswerWrong &&
@@ -99,14 +100,14 @@ const QuizSubmissionPage = () => {
                       <strong>Your answer was incorrect.</strong> The correct
                       answer is:{" "}
                       <span className="text-green-700">
-                        {question.correctOption}
+                        {question?.correctOption}
                       </span>
                       .
                     </p>
                   )}
-                  {question.explanation ? (
+                  {question?.explanation ? (
                     <p className="mt-2 text-gray-700">
-                      <strong>Explanation:</strong> {question.explanation}
+                      <strong>Explanation:</strong> {question?.explanation}
                     </p>
                   ) : null}
                 </div>
@@ -115,7 +116,7 @@ const QuizSubmissionPage = () => {
           </div>
           <div className="mt-6 bg-gray-200 p-4 rounded-md flex items-start lg:items-center lg:justify-between flex-col lg:flex-row justify-start">
             <p className="text-lg font-semibold">
-              Total Questions: {questions.length}
+              Total Questions: {questions?.length}
             </p>
             <p className="text-lg font-semibold">Total Marks: {totalMarks}</p>
             <p className="text-lg font-semibold">

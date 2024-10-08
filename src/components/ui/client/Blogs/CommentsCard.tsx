@@ -17,7 +17,7 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
 
       <hr className="border-b-[0.5] border-gray-200" />
       <div className="mt-5 mb-10">
-        {post.comments && post.comments.length === 0 ? (
+        {post?.comments && post?.comments?.length === 0 ? (
           <div>
             <p className="text-center text-xl hind-siliguri-light text-gray-400">
             No comments yet. Be the first to leave a comment!
@@ -26,7 +26,7 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
         ) : (
           <div>
             <div>
-              {post.comments?.map((item) => (
+              {post?.comments?.map((item) => (
                 <div
                   key={item._id}
                   className="border border-gray-200 mb-4 p-2 rounded-lg"
@@ -34,11 +34,11 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       <p className="w-[40px] h-[40px]  bg-myBgPrimary text-white flex items-center justify-center rounded-full">
-                        {item.user.initials}
+                        {item?.user?.initials}
                       </p>
                       <div>
                         <h1 className="text-sm hind-siliguri-medium">
-                          {item.user.fullname}
+                          {item?.user?.fullname}
                         </h1>
                         <p className="text-xs hind-siliguri-medium">
                           {" "}
@@ -57,7 +57,7 @@ const CommentsCard: React.FC<TBlogProps> = ({ post }) => {
                   </div>
                   <div className=" mt-3">
                     <h1 className="text-lg hind-siliguri-medium">
-                      {item.description}
+                      {item?.description}
                     </h1>
                   </div>
                 </div>

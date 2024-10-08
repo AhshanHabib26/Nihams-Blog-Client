@@ -39,7 +39,7 @@ const quizCategoryApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      keepUnusedDataFor: 60,
+      keepUnusedDataFor: 600,
       providesTags: ["QuizCategory"],
       transformResponse: (response: TResponseRedux<TQuizCategory[]>) => ({
         data: response.data,
@@ -67,7 +67,6 @@ const quizCategoryApi = baseApi.injectEndpoints({
         url: `/quiz/categories/${id}`,
         method: "GET",
       }),
-      keepUnusedDataFor: 60,
       providesTags: ["QuizCategory"],
     }),
   }),

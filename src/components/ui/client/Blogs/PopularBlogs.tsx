@@ -1,12 +1,27 @@
 import PopularBlogCard from "./PopularBlogCard";
 import { TBlog } from "@/types/common.data";
 import { useGetAllPostQuery } from "@/redux/features/post/postApi";
-import { CategoryLoader } from "@/loader/CategoryLoader";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setLoading } from "@/redux/features/global/globalSlice";
 
 const PopularBlogs = () => {
-  const { data, isLoading } = useGetAllPostQuery({});
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetAllPostQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: false,
+    }
+  );
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
+
   const topBlogs = data?.data
-    ? [...data.data].sort((a: TBlog, b: TBlog) => b.viewsCount - a.viewsCount).slice(0, 10)
+    ? [...data.data]
+        .sort((a: TBlog, b: TBlog) => b.viewsCount - a.viewsCount)
+        .slice(0, 10)
     : [];
 
   return (
@@ -15,23 +30,18 @@ const PopularBlogs = () => {
         <h1 className="text-lg hind-siliguri-semibold ml-2">Popular Post</h1>
       </div>
       <div className="p-4">
-        {isLoading ? (
-          <CategoryLoader />
-        ) : (
-          <div>
-            {topBlogs.map((post: TBlog, index) => (
-              <PopularBlogCard
-                post={post}
-                key={post._id}
-                isLast={index === topBlogs.length - 1}
-              />
-            ))}
-          </div>
-        )}
+        <div>
+          {topBlogs.map((post: TBlog, index) => (
+            <PopularBlogCard
+              post={post}
+              key={post._id}
+              isLast={index === topBlogs.length - 1}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default PopularBlogs;
-

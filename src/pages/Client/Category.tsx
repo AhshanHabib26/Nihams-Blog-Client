@@ -4,14 +4,16 @@ import RecentBlogs from "@/components/ui/client/Blogs/RecentBlogs";
 import BlogCategory from "@/components/ui/client/Category/BlogCategory";
 import Container from "@/lib/Container";
 import { PaginationCard } from "@/lib/PaginationCard";
-import { CategoryLoader } from "@/loader/CategoryLoader";
+import { setLoading } from "@/redux/features/global/globalSlice";
 import { useGetAllPostQuery } from "@/redux/features/post/postApi";
 import { TBlog } from "@/types/common.data";
 import { HardDrive } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const CategoryPage = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -27,48 +29,36 @@ const CategoryPage = () => {
 
   const total = data?.meta?.total ?? 0;
 
-  const [showLoader, setShowLoader] = useState(false);
-
-  // Delay loader for smoother experience
   useEffect(() => {
-    const delay = setTimeout(() => {
-      if (isLoading) setShowLoader(true);
-    }, 300);
-
-    return () => {
-      clearTimeout(delay);
-      setShowLoader(false);
-    };
-  }, [isLoading]);
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   return (
     <div className="mt-10">
       <Container>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 lg:col-span-8">
-            {showLoader ? (
-              <CategoryLoader />
-            ) : (
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl hind-siliguri-semibold text-gray-600">
-                    Category -{" "}
-                  </h1>
-                  <p className="text-2xl font-medium text-myBgPrimary">{id}</p>
-                </div>
-                <hr className=" my-2 border-[0.5] border-dashed border-gray-200" />
+        <div>
+          {!isLoading && (
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 lg:col-span-8">
                 <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl hind-siliguri-semibold text-gray-600">
+                      Category -{" "}
+                    </h1>
+                    <p className="text-2xl font-medium text-myBgPrimary">
+                      {id}
+                    </p>
+                  </div>
+                  <hr className=" my-2 border-[0.5] border-dashed border-gray-200" />
                   <div>
-                    {selectedCategory && selectedCategory?.length === 0 ? (
-                      <div className="flex items-center justify-center flex-col mt-20">
-                        <HardDrive size={40} className=" text-gray-400" />
-                        <h1 className="text-gray-400">No Post Found</h1>
-                      </div>
-                    ) : (
-                      <>
-                        {isLoading ? (
-                          <CategoryLoader />
-                        ) : (
+                    <div>
+                      {selectedCategory && selectedCategory?.length === 0 ? (
+                        <div className="flex items-center justify-center flex-col mt-20">
+                          <HardDrive size={40} className=" text-gray-400" />
+                          <h1 className="text-gray-400">No Post Found</h1>
+                        </div>
+                      ) : (
+                        <>
                           <div>
                             <div className="mt-5">
                               {selectedCategory &&
@@ -88,19 +78,19 @@ const CategoryPage = () => {
                                 </div>
                               )}
                           </div>
-                        )}
-                      </>
-                    )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-          <div className="col-span-12 lg:col-span-4">
-            <RecentBlogs />
-            <BlogCategory />
-            <PopularBlogs />
-          </div>
+              <div className="col-span-12 lg:col-span-4">
+                <RecentBlogs />
+                <BlogCategory />
+                <PopularBlogs />
+              </div>
+            </div>
+          )}
         </div>
       </Container>
     </div>

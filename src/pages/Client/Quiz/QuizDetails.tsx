@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
-import { DashboardLoader } from "@/loader/DashboardLoader";
 import { useNavigate, useParams } from "react-router-dom";
 import avatar from "../../../assets/images/quizDetailsImg.jpg";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,8 @@ import {
 } from "@/redux/features/quiz/quiz/quizApi";
 import Container from "@/lib/Container";
 import QuizResultModal from "@/lib/QuizResultModal";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/features/global/globalSlice";
 
 export interface Question {
   _id: string;
@@ -25,6 +26,7 @@ export interface Question {
 
 const QuizDetails = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
   const [isToggled, setIsToggled] = useState(false);
@@ -35,7 +37,7 @@ const QuizDetails = () => {
   const [reviewMode, setReviewMode] = useState(false);
   const [timer, setTimer] = useState<number>(0);
   const [retakeCount, setRetakeCount] = useState<number>(0);
-  const { data, isFetching } = useGetSingleQuizQuery(id);
+  const { data, isLoading } = useGetSingleQuizQuery(id);
   const [submitQuiz] = useSubmitQuizMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quizResult, setQuizResult] = useState({
@@ -75,13 +77,9 @@ const QuizDetails = () => {
     return () => clearInterval(timerInterval);
   }, [timer, isToggled]);
 
-  if (isFetching) {
-    return (
-      <div>
-        <DashboardLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
 
   const handleToggle = () => {
     setIsToggled((prev) => !prev);
@@ -104,7 +102,7 @@ const QuizDetails = () => {
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < data.data.questions.length - 1) {
+    if (currentQuestionIndex < data?.data?.questions?.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       setReviewMode(true);
@@ -128,7 +126,7 @@ const QuizDetails = () => {
 
     try {
       const response = await submitQuiz({
-        id: data.data._id,
+        id: data?.data?._id,
         data: userAnswers,
       }).unwrap();
 
@@ -139,7 +137,7 @@ const QuizDetails = () => {
         totalQuestions,
         totalMarks,
         correctCount,
-        submissionId: submission._id,
+        submissionId: submission?._id,
       });
       setIsModalOpen(true); 
     } catch (error) {
@@ -184,7 +182,7 @@ const QuizDetails = () => {
     });
   };
 
-  const currentQuestion = data.data.questions[currentQuestionIndex];
+  const currentQuestion = data?.data?.questions[currentQuestionIndex];
 
   return (
     <div className="mt-10">

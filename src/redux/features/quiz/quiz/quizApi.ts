@@ -38,7 +38,7 @@ const quizApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      keepUnusedDataFor: 60,
+      keepUnusedDataFor: 600,
       providesTags: ["Quiz"],
       transformResponse: (response: TResponseRedux<TQuiz[]>) => ({
         data: response.data,
@@ -75,7 +75,6 @@ const quizApi = baseApi.injectEndpoints({
         url: `/quiz/${id}`,
         method: "GET",
       }),
-      keepUnusedDataFor: 60,
       providesTags: ["Quiz"],
     }),
     getSubmissionQuiz: builder.query({

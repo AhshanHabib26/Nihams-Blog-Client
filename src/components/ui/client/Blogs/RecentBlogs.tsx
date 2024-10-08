@@ -1,13 +1,26 @@
-import { CategoryLoader } from "@/loader/CategoryLoader";
 import { useGetAllPostQuery } from "@/redux/features/post/postApi";
 import { TBlog } from "@/types/common.data";
 import RecentBlogsCard from "./RecentBlogsCard";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setLoading } from "@/redux/features/global/globalSlice";
 
 const RecentBlogs = () => {
-  const { data, isLoading } = useGetAllPostQuery({});
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetAllPostQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: false,
+    }
+  );
+
+  useEffect(() => {
+    dispatch(setLoading(isLoading));
+  }, [isLoading, dispatch]);
+
   const today = new Date();
   const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1); 
+  yesterday.setDate(today.getDate() - 1);
 
   // Filter for recent blogs created in the last 24 hours
   const recentBlogs = data?.data
@@ -15,11 +28,11 @@ const RecentBlogs = () => {
         .filter((post: TBlog) => {
           if (post.createdAt) {
             const createdAt = new Date(post.createdAt);
-            return createdAt >= yesterday && createdAt <= today; 
+            return createdAt >= yesterday && createdAt <= today;
           }
-          return false; 
+          return false;
         })
-        .slice(0, 10) 
+        .slice(0, 10)
     : [];
 
   // Get previous posts excluding the recent ones
@@ -30,17 +43,14 @@ const RecentBlogs = () => {
             const createdAt = new Date(post.createdAt);
             return createdAt < yesterday; // Get posts older than yesterday
           }
-          return false; 
+          return false;
         })
         .sort(() => 0.5 - Math.random()) // Shuffle the posts randomly
         .slice(0, 10) // Take up to 10 random previous posts
     : [];
 
   // Combine recent blogs and previous blogs to ensure we always have 10
-  const blogsToDisplay = [
-    ...recentBlogs,
-    ...previousBlogs,
-  ].slice(0, 10); 
+  const blogsToDisplay = [...recentBlogs, ...previousBlogs].slice(0, 10);
 
   return (
     <div className="shadow-md border-[0.5px] border-gray-200 rounded-md">
@@ -48,23 +58,17 @@ const RecentBlogs = () => {
         <h1 className="text-lg hind-siliguri-semibold ml-2">Recent Blogs</h1>
       </div>
       <div className="p-4">
-        {isLoading ? (
-          <CategoryLoader />
-        ) : (
-          <div>
-            {blogsToDisplay.length > 0 ? (
-              blogsToDisplay.map((post: TBlog, index) => (
+        <div>
+          {blogsToDisplay.length > 0
+            ? blogsToDisplay.map((post: TBlog, index) => (
                 <RecentBlogsCard
                   post={post}
                   key={post._id}
                   isLast={index === blogsToDisplay.length - 1}
                 />
               ))
-            ) : (
-              <p>No posts available.</p>
-            )}
-          </div>
-        )}
+            :  <p>No posts available.</p>}
+        </div>
       </div>
     </div>
   );
